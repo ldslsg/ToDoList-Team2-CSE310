@@ -1,31 +1,108 @@
+:root {
+  --main-color: #282c34;
+  --main-text-color: #797979;
+}
+
 .App {
   text-align: center;
+  position: relative; /* Add relative positioning to the .App container */
+  /* background-color: var(--main-color); */
 }
 
 .app-logo {
-  /* height: 40vmin;
-  pointer-events: none; */
+  height: 70px;
+  pointer-events: none;
 }
 
-.App-header{
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
+.app-name {
+  height: 3em;
+  pointer-events: none;
+}
 
-  /* display: flex;
+.App-header {
+  /*position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2; */
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: var(--main-color);
+  height: 80px; /* Adjust min-height to your preference */
+  font-size: calc(10px + 2vmin);
+  color: var(--main-text-color);
+  align-items: center; /* Vertically center items */
+  border: 1px solid var(--main-text-color);
+  
+  margin-left: 240px; /* Adjust left margin to create space for the sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease, width 0.3s ease; /* Smooth transition for content shift */
+}
+
+.sidebar-header {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--main-text-color);
+  width: 240px;
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  /* top: 70px; */
+  left: 0;
+  width: 200px;
+  /* height: calc(100% - 70px); */
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: var(--main-color);
+  color: var(--main-text-color);
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; */
+  z-index: 1; /* Ensure the sidebar appears below the header */
+  transition: transform 0.3s ease; /* Smooth transition for collapsing */
 }
 
+.panel.collapsed {
+  /* transform: translateX(-100%); */
+  transform: translateX(-85%); /* Move sidebar out of view */
+}
 
+.content {
+  /*margin-top: 70px; /* Adjust top margin to account for the fixed header */
+  margin-left: 240px; /* Adjust left margin to create space for the sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease; /* Smooth transition for content shift */
+}
 
+.panel.collapsed + .content {
+  margin-left: 40px; /* Adjust left margin when sidebar is collapsed */
+}
 
+.panel.collapsed + .App-header {
+  margin-left: 40px; /* Adjust left margin when sidebar is collapsed */
+  width: calc(100% - 40px);
+}
 
+.toggle-button {
+  background: none;
+  border: none;
+  color: var(--main-text-color);
+  font-size: 1.5em;
+  cursor: pointer;
+  margin-left: 20px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  /* .App-logo {
     animation: App-logo-spin infinite 20s linear;
-  }
+  } */
 }
 
 /* .App-header {
@@ -39,15 +116,15 @@
   color: white;
 } */
 
-.App-link {
+/* .App-link {
   color: #61dafb;
-}
+} */
 
-@keyframes App-logo-spin {
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}
+} */
