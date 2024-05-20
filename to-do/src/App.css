@@ -2,10 +2,20 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app-logo {
+  /* height: 40vmin;
+  pointer-events: none; */
 }
+
+header{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
