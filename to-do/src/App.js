@@ -27,8 +27,7 @@ function App() {
   return (
     <div className="App">
 
-      {/* Header */}
-      <div className="App-header">
+      <header>
 
         <div className='sidebar-header'>
           <img src={logo} className="app-logo" alt="logo" />
@@ -38,31 +37,27 @@ function App() {
           </button>
         </div>
 
-        <img src={name} className="app-name" alt="Check Mate" />
-        <input type="text" className="search-box" placeholder="Search..." />
-        <IoSearchCircle />
-        <h5 className="username">username</h5>
-        <div className="user-info">
-          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
+        <div className="app-header">
+          <img src={name} className="app-name" alt="Check Mate" />
+          <input type="text" className="search-box" placeholder="Search..." />
+          <IoSearchCircle />
         </div>
 
         <div className='sidebar-header'>
           <button onClick={toggleRightSidebar} className="toggle-button">
             {isRightSidebarOpen ? <FaAnglesRight /> : <FaAnglesLeft />}
           </button>
+          <h5 className="username">username</h5>
+          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
         </div>
 
-      </div>
+      </header>
 
-
-
-      
-      
-      {/* Main Content */}
       <main>
 
         {/* Left Sidebar */}
         <div className={`left-sidebar ${isLeftSidebarOpen ? '' : 'collapsed'}`}>
+
           {/* Sidebar Content */}
           <h2>Check Lists</h2>
           <a href="#">List 1</a>
@@ -71,18 +66,21 @@ function App() {
           <a href="#">List 4</a>
           <a href="#">List 5</a>
           <a href="#">List 6</a>
-        </div>
 
-        {/* Main Content */}
-        <div className="content">
-          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
         </div>
 
         {/* Right Sidebar */}
         <div className={`right-sidebar ${isRightSidebarOpen ? '' : 'collapsed'}`}>
+
           <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
-          {/* Sidebar Content */}
-          {/* Add content for right sidebar here */}
+
+        </div>
+
+        {/* Main Content */}
+        <div className={`content ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
+
+          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
+
         </div>
 
       </main>
@@ -90,6 +88,7 @@ function App() {
       <footer>
 
       </footer>
+
     </div>
   );
 }
