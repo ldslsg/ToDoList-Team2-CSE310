@@ -1,12 +1,15 @@
 :root {
   --main-color: #282c34;
+  --secondary-color: #53565b;
   --main-text-color: #797979;
 }
 
 .App {
   text-align: center;
-  position: relative; /* Add relative positioning to the .App container */
-  /* background-color: var(--main-color); */
+  position: relative;
+  height: 100vh;
+  background-color: var(--main-color);
+  border: 1px solid var(--main-text-color);
 }
 
 .app-logo {
@@ -20,111 +23,95 @@
 }
 
 .App-header {
-  /*position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 2; */
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--main-color);
-  height: 80px; /* Adjust min-height to your preference */
+  height: 80px;
   font-size: calc(10px + 2vmin);
   color: var(--main-text-color);
-  align-items: center; /* Vertically center items */
-  border: 1px solid var(--main-text-color);
-  
-  margin-left: 240px; /* Adjust left margin to create space for the sidebar */
-  padding: 20px;
-  transition: margin-left 0.3s ease, width 0.3s ease; /* Smooth transition for content shift */
+  border-bottom: 1px solid var(--main-text-color);
 }
 
-.sidebar-header {
-  height: 80px;
+.sidebar-header, .right-sidebar{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0;
-  margin: 0;
-  border: 1px solid var(--main-text-color);
-  width: 240px;
+  height: 80px;
+  border-bottom: 1px solid var(--main-text-color);
+  width: 100%;
 }
 
-.panel {
+.left-sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+.right-sidebar.collapsed {
+  transform: translateX(100%);
+}
+
+.content {
+  border: red 10px solid;
+  margin-left: 200px;
+  margin-right: 200px;
+  transition: margin-left 0.3s ease;
+  transition: margin-right 0.3s ease;
+}
+
+.left-sidebar, .right-sidebar {
   position: fixed;
-  top: 0;
-  /* top: 70px; */
-  left: 0;
-  width: 200px;
-  /* height: calc(100% - 70px); */
-  height: 100%;
-  padding: 20px;
+  top: 80;
+  padding-left: 20px;
+  padding-right: 20px;
   overflow-y: auto;
   background-color: var(--main-color);
   color: var(--main-text-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1; /* Ensure the sidebar appears below the header */
-  transition: transform 0.3s ease; /* Smooth transition for collapsing */
+  z-index: 1;
+  transition: transform 0.3s ease;
+  border: 1px solid var(--main-text-color);
 }
 
-.panel.collapsed {
-  /* transform: translateX(-100%); */
-  transform: translateX(-85%); /* Move sidebar out of view */
+.right-sidebar {
+  right: 0;
+  width: 150px;
+  height: calc(100% - 80px);
+  border-left: 1px solid var(--main-text-color);
 }
 
-.content {
-  /*margin-top: 70px; /* Adjust top margin to account for the fixed header */
-  margin-left: 240px; /* Adjust left margin to create space for the sidebar */
-  padding: 20px;
-  transition: margin-left 0.3s ease; /* Smooth transition for content shift */
-}
-
-.panel.collapsed + .content {
-  margin-left: 40px; /* Adjust left margin when sidebar is collapsed */
-}
-
-.panel.collapsed + .App-header {
-  margin-left: 40px; /* Adjust left margin when sidebar is collapsed */
-  width: calc(100% - 40px);
+.left-sidebar {
+  left: 0;
+  width: 150px;
+  height: calc(100% - 80px);
+  border-left: 1px solid var(--main-text-color);
 }
 
 .toggle-button {
+  padding: 10px;
+  padding-bottom: 4px;
+  margin: 0;
   background: none;
+  background-color: var(--secondary-color);
   border: none;
   color: var(--main-text-color);
   font-size: 1.5em;
   cursor: pointer;
-  margin-left: 20px;
+  border: 1px solid var(--main-text-color);
+  border-radius: 10px;
+  width: 2em;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  /* .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  } */
+.search-box {
+  margin-right: 10px;
 }
 
-/* .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.user-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-} */
+}
 
-/* .App-link {
-  color: #61dafb;
-} */
-
-/* @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+.user-img {
+  border-radius: 50%;
+}
