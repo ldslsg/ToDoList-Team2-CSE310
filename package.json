@@ -1,5 +1,13 @@
 {
-  "dependencies": {
-    "react-icons": "^5.2.1"
+  "name": "checkmate",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix to-do-backend\" \"npm run start --prefix to-do\"",
+    "install-all": "npm install --prefix to-do-backend && npm install --prefix to-do",
+    "build": "npm run build --prefix to-do",
+    "dev": "concurrently \"npm run dev --prefix to-do-backend\" \"npm start --prefix to-do\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
