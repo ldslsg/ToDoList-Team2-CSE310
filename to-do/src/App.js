@@ -1,12 +1,13 @@
-//npm start
+//npm run start
 // images
 import logo from './images/checkmate-dark-02.png';
 import name from './images/checkmate-name-dark.png';
 // icons
 import { IoSearchCircle } from "react-icons/io5";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { FaAnglesLeft } from "react-icons/fa6";
 import { FaAnglesRight } from "react-icons/fa6";
+import { RiArrowRightWideFill } from "react-icons/ri";
+import { RiArrowLeftWideFill } from "react-icons/ri";
 
 import './App.css';
 import React, { useState } from 'react';
@@ -27,28 +28,28 @@ function App() {
   return (
     <div className="App">
 
-      <header>
+      <p className='placeholder'></p>
+      <header className={`app-header ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
 
-        <div className='sidebar-header'>
-          <img src={logo} className="app-logo" alt="logo" />
-          <RxHamburgerMenu />
-          <button onClick={toggleLeftSidebar} className="toggle-button">
-            {isLeftSidebarOpen ? <FaAnglesLeft /> : <FaAnglesRight />}
+        <div className={`l-sidebar-header ${isLeftSidebarOpen ? '' : 'collapsed'}`}>
+          <button onClick={toggleLeftSidebar} className={`toggle-button-l ${isLeftSidebarOpen ? '' : 'collapsed'}`}>
+            {isLeftSidebarOpen ? <RiArrowLeftWideFill /> : <RiArrowRightWideFill />}
           </button>
+          <img src={logo} className={`app-logo ${isLeftSidebarOpen ? '' : 'collapsed'}`} alt="logo" />
         </div>
 
-        <div className="app-header">
+        <div className={`main-header`}>
           <img src={name} className="app-name" alt="Check Mate" />
           <input type="text" className="search-box" placeholder="Search..." />
           <IoSearchCircle />
         </div>
 
-        <div className='sidebar-header'>
-          <button onClick={toggleRightSidebar} className="toggle-button">
-            {isRightSidebarOpen ? <FaAnglesRight /> : <FaAnglesLeft />}
+        <div className={`r-sidebar-header ${isRightSidebarOpen ? '' : 'collapsed'}`}>
+          <h5 className={`username ${isRightSidebarOpen ? '' : 'collapsed'}`}>username</h5>
+          <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div>
+          <button onClick={toggleRightSidebar} className={`toggle-button-r ${isRightSidebarOpen ? '' : 'collapsed'}`}>
+            {isRightSidebarOpen ? <RiArrowRightWideFill /> : <RiArrowLeftWideFill />}
           </button>
-          <h5 className="username">username</h5>
-          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
         </div>
 
       </header>
@@ -72,14 +73,30 @@ function App() {
         {/* Right Sidebar */}
         <div className={`right-sidebar ${isRightSidebarOpen ? '' : 'collapsed'}`}>
 
-          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
+          <h3 className="list-title">Top Priorities</h3>
+          <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+          </ul>
 
         </div>
 
         {/* Main Content */}
         <div className={`content ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
 
-          <img src="https://fakeimg.pl/70x70" className="user-img" alt="user img" />
+          <h3 className="list-title">List Title</h3>
+          <ol>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+          </ol>
 
         </div>
 
