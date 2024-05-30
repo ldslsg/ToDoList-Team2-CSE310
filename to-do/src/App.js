@@ -2,6 +2,7 @@
 // images
 import logo from './images/checkmate-dark-02.png';
 import name from './images/checkmate-name-dark.png';
+import background_logo from './images/checkmate-tall.png';
 // icons
 import { IoSearchCircle } from "react-icons/io5";
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -60,13 +61,14 @@ function App() {
         <div className={`left-sidebar ${isLeftSidebarOpen ? '' : 'collapsed'}`}>
 
           {/* Sidebar Content */}
-          <h2>Check Lists</h2>
-          <a href="#">List 1</a>
-          <a href="#">List 2</a>
-          <a href="#">List 3</a>
-          <a href="#">List 4</a>
-          <a href="#">List 5</a>
-          <a href="#">List 6</a>
+          <h3>Check Lists</h3>
+          
+          <button className='list-button'>List 1</button>
+          <button className='list-button'>List 2</button>
+          <button className='list-button'>List 3</button>
+          <button className='list-button'>List 4</button>
+          <button className='list-button'>List 5</button>
+          <button className='list-button'>List 6</button>
 
         </div>
 
@@ -75,6 +77,24 @@ function App() {
 
           <h3 className="list-title">Top Priorities</h3>
           <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
             <li>Item 1</li>
             <li>Item 2</li>
             <li>Item 3</li>
@@ -96,6 +116,30 @@ function App() {
             <li>Item 4</li>
             <li>Item 5</li>
             <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+            <li>Item 5</li>
+            <li>Item 6</li>
           </ol>
 
         </div>
@@ -104,6 +148,7 @@ function App() {
 
       <footer>
 
+        <p>&copy; 2023 Check Mate. All rights reserved.</p>
       </footer>
 
     </div>
