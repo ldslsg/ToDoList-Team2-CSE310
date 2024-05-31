@@ -1,20 +1,23 @@
+/* The color scheme*/
 :root {
-  --main-color: #282c34;
-  --secondary-color: #53565b;
-  --checker-color: #1D2128;
-  --main-text-color: #797979;
-  --accent-color: #6CC466;
-  --accent-color-2: #D68983;
+  --dark-gray-2: #1D2128;
+  --dark-gray-1: #282c34;
+  --light-gray-1: #53565b;
+  --light-gray-2: #797979;
+  --accent-color-green: #6CC466;
+  --accent-color-red: #D68983;
 }
 
 /* The main app style*/
 .App {
-  text-align: center;
   position: relative;
+  text-align: center;
   height: 100vh;
-  background-color: var(--main-color);
+  background-color: var(--dark-gray-1);
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------------------ */
+/* EVERYTHING IN THE HEADER*/
 /* The placeholder for the header*/
 .placeholder {
   margin: 0;
@@ -23,34 +26,20 @@
   height: 80px;
 }
 
-/* The logo in the header*/
-.app-logo {
-  height: 70px;
-  pointer-events: none;
-  grid-column: 3/4;
-}
-.app-logo.collapsed {
-  display: none;
-}
-
-/* The unique font for the app name*/
-.app-name {
-  height: 3em;
-  pointer-events: none;
-}
-
-/* The header style*/
+/* The main style for all headers*/
 .app-header {
   position: fixed;
   top: 0;
+  z-index: 1;
   display: grid;
   grid-template-columns: 192px 1fr 267px;
-  background-color: var(--main-color);
-  height: 80px;
   width: 100%;
+  height: 80px;
   font-size: calc(10px + 2vmin);
-  color: var(--main-text-color);
-  border-bottom: 1px solid var(--accent-color);
+  background-color: var(--dark-gray-1);
+  color: var(--light-gray-2);
+  border-bottom: 1px solid var(--accent-color-green);
+  transition: all 0.3s ease;
 }
 .app-header.right {
   grid-template-columns: 192px 1fr 110px;
@@ -67,12 +56,12 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   width: 100%;
-  border-right: var(--accent-color) 1px solid;
+  border-right: var(--accent-color-green) 1px solid;
+  transition: all 0.3s ease;
 }
 .l-sidebar-header.collapsed{
   grid-template-columns: 1fr auto;
   width: 40px;
-  /* transform: translateX(calc(-100% + 40px)); */
 }
 
 /* The right sidebar header style*/
@@ -80,151 +69,81 @@
   display: grid;
   grid-template-columns: 1fr auto auto;
   width: 100%;
-  border-left: var(--accent-color) 1px solid;
+  border-left: var(--accent-color-green) 1px solid;
+  transition: all 0.3s ease;
 }
 .r-sidebar-header.collapsed {
   grid-template-columns: auto auto 1fr;
   width: 90px;
-  /* transform: translateX(calc(100% - 90px)); */
 }
 
+/* The part of the header inbetween the left and right sidebars*/
 .main-header{
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* border-left: #797979 1px solid;
-  border-right: #797979 1px solid; */
 }
 
-.left-sidebar h3, .right-sidebar h3{
-  text-align: center;
-}
-
-.left-sidebar, .right-sidebar {
-  position: fixed;
-  top: 80;
-  height: calc(100% - 110px);
-  padding-left: 20px;
-  padding-right: 20px;
-  overflow-y: auto;
-  background-color: var(--main-color);
-  color: var(--main-text-color);
-  display: flex;
-  flex-direction: column;
-  /* align-items: left; */
-  text-align: left;
-  z-index: 1;
-  transition: transform 0.3s ease;
-}
-
-.left-sidebar {
-  left: 0;
-  width: 152px;
-  border-right: 1px solid var(--accent-color);
-}
-
-.right-sidebar {
-  right: 0;
-  width: 227px;
-  border-left: 1px solid var(--accent-color);
-
-  background-image: url('./images/checkmate-tall.png');
-  background-size: cover; /* Ensures the image covers the entire background */
-  background-position: center; /* Centers the image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
-}
-
-.left-sidebar.collapsed {
-  transform: translateX(-100%);
-}
-
-.right-sidebar.collapsed {
-  transform: translateX(100%);
-}
-
-.content {
-
-  position: fixed;
-  top: 80;
-  height: calc(100% - 110px);
-  width: calc(100% - 192px - 267px);
-
-  background: 
-    linear-gradient(45deg, var(--checker-color) 25%, transparent 25%, transparent 75%, var(--checker-color) 75%, var(--checker-color)),
-    linear-gradient(45deg, var(--checker-color) 25%, transparent 25%, transparent 75%, var(--checker-color) 75%, var(--checker-color));
-  background-position: 0 0, 20px 20px;
-  background-size: 40px 40px;
-  background-repeat: repeat;
-  color: var(--main-text-color);
-
-  overflow-y: auto;
-  border-top: var(--accent-color-2) 1px solid;
-  background-color: 1px solid var(--main-text-color);
-  margin-left: 192px;
-  margin-right: 267px;
-  text-align: left;
-  transition: margin-left 0.3s ease;
-  transition: margin-right 0.3s ease;
-}
-
-.content h3 {
-  color: var(--main-text-color);
-  text-align: center;
-}
-
-.content.left {
-  margin-left: 0;
-  width: calc(100% - 267px);
-}
-
-.content.right {
-  margin-right: 0;
-  width: calc(100% - 192px);
-}
-
-.content.right.left {
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
-
+/* The style for both toggle buttons*/
 .toggle-button-l, .toggle-button-r {
   padding: 0;
   margin: 0;
   background: none;
-  color: var(--main-text-color);
+  color: var(--light-gray-2);
   font-size: 2em;
   cursor: pointer;
   border: none;
 }
 
+/* The toggle button left*/
 .toggle-button-l {
-  border-left: 4px solid var(--accent-color);
+  border-left: 4px solid var(--accent-color-green);
   grid-column: 1/2;
 }
-
 .toggle-button-l.collapsed {
   border: none;
   grid-column: 3/4;
 }
 
+/* The toggle button right*/
 .toggle-button-r {
-  border-right: 4px solid var(--accent-color);
+  border-right: 4px solid var(--accent-color-green);
   grid-column: 3/4;
   grid-row: 1/2;
 }
-
 .toggle-button-r.collapsed {
   border: none;
   grid-column: 1/2;
   grid-row: 1/2;
 }
 
-.username.collapsed {
+/* The logo in the left sidebar header*/
+.app-logo {
+  height: 70px;
+  grid-column: 3/4;
+}
+.app-logo.collapsed {
   display: none;
 }
 
+/* The unique font for the app name in the middle part of the header*/
+.app-name {
+  height: 3em;
+  pointer-events: none;
+}
+
+/* The search bar style in the middle part of the header*/
+.search-box {
+  border: #1D2128 1px solid;
+  border-radius: 5px;
+  background-color: var(--dark-gray-2);
+  padding: 10px;
+  padding-right: 40px;
+  margin-right: 10px;
+}
+
+/* The user image and username styles in the right sidebar header*/
 .user-img {
   border-radius: 50%;
   height: 50px;
@@ -235,32 +154,179 @@
   justify-content: center;
   align-items: center;
 }
-
-.search-box {
-  margin-right: 10px;
+.username.collapsed {
+  display: none;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------------------ */
+/* EVERYTHING IN THE SIDEBARS*/
+/* The styles for both the left and right sidebars*/
+.left-sidebar h3, .right-sidebar h3{
+  text-align: center;
+}
+.left-sidebar, .right-sidebar {
+  position: fixed;
+  z-index: 2;
+  top: 80;
+  height: calc(100% - 110px);
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-y: auto;
+  background-color: var(--dark-gray-1);
+  color: var(--light-gray-2);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+/* The left sidebar styles*/
+.left-sidebar {
+  left: 0;
+  width: 152px;
+  border-right: 1px solid var(--accent-color-green);
+}
+.left-sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* The right sidebar styles*/
+.right-sidebar {
+  right: 0;
+  width: 227px;
+  border-left: 1px solid var(--accent-color-green);
+
+  background-image: url('./images/checkmate-tall.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.right-sidebar.collapsed {
+  transform: translateX(100%);
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------------------ */
+/* EVERYTHING IN THE MAIN CONTENT*/
+/* The content style*/
+.content h3 {
+  color: var(--light-gray-2);
+  text-align: center;
+}
+.content {
+  position: fixed;
+  z-index: 0;
+  top: 80;
+  height: calc(100% - 110px);
+  width: calc(100% - 192px - 267px);
+  overflow-y: auto;
+  border-top: var(--accent-color-red) 1px solid;
+  background-color: 1px solid var(--light-gray-2);
+  margin-left: 192px;
+  margin-right: 267px;
+  text-align: left;
+  transition: all 0.3s ease;
+
+  background: 
+    linear-gradient(45deg, var(--dark-gray-2) 25%, transparent 25%, transparent 75%, var(--dark-gray-2) 75%, var(--dark-gray-2)),
+    linear-gradient(45deg, var(--dark-gray-2) 25%, transparent 25%, transparent 75%, var(--dark-gray-2) 75%, var(--dark-gray-2));
+  background-position: 0 0, 20px 20px;
+  background-size: 40px 40px;
+  background-repeat: repeat;
+  color: var(--light-gray-2);
+}
+.content.left {
+  margin-left: 0;
+  width: calc(100% - 267px);
+}
+.content.right {
+  margin-right: 0;
+  width: calc(100% - 192px);
+}
+.content.right.left {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* The scrollbar styles*/
 .right-sidebar, .left-sidebar, .content {
-    scrollbar-width: thin;
-    scrollbar-color: var(--secondary-color) var(--checker-color);
+  scrollbar-width: thin;
+  scrollbar-color: var(--light-gray-1) var(--dark-gray-2);
 }
 
+/* The list button style*/
 .list-button {
-  color: var(--main-text-color);
+  color: var(--light-gray-2);
   background-color: transparent;
   border: none;
   width: 100%;
+  border-top: transparent 1px solid;
+  border-bottom: transparent 1px solid;
 }
+.list-button:hover {
+  color: var(--accent-color-green);
+  border-top: var(--accent-color-green) 1px solid;
+  border-bottom: var(--accent-color-green) 1px solid;
+  border-radius: 10px;
+}
+/*------------------------------------------------------------------------------------------------------------------------------------ */
+/* EVERYTHING IN THE FOOTER*/
+/* The footer style*/
 
-footer{
+.main-footer, .l-sidebar-footer, .r-sidebar-footer{
   position: fixed;
+  z-index: 3;
   bottom: 0;
-  width: 100%;
   height: 30px;
-  background-color: var(--checker-color);
-  color: var(--main-text-color);
+  padding: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
+}
+.main-footer {
+  width: calc(100% - 192px - 267px);
+  border-top: var(--accent-color-red) 1px solid;
+}
+.main-footer.right{
+  width: calc(100% - 192px);
+}
+.main-footer.left{
+  width: calc(100% - 267px);
+}
+.main-footer.right.left{
+  width: 100%;
+}
+.l-sidebar-footer{
+  left: 0;
+  width: 192px;
+  border-right: var(--accent-color-green) 1px solid;
+}
+.r-sidebar-footer{
+  right: 0;
+  width: 267px;
+  border-left: var(--accent-color-green) 1px solid;
+}
+p{
+  margin: 0;
+  padding: 0;
+}
+
+
+.list-name-input{
+  border: #1D2128 1px solid;
+  border-radius: 5px;
+  background-color: var(--dark-gray-2);
+  color: var(--light-gray-2);
+  width: 152px;
+}
+
+.new-list{
+  width: 100%;
+  color: var(--accent-color-green);
+  background-color: transparent;
+  border: none;
+}
+.new-list:hover{
+  color: var(--dark-gray-1);
+  background-color: var(--accent-color-green);
 }
