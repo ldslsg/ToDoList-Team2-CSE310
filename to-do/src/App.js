@@ -1,5 +1,4 @@
 //npm run start
-
 // images
 import logo from './images/checkmate-dark-02.png';
 import name from './images/checkmate-name-dark.png';
@@ -21,9 +20,12 @@ function App() {
 
 
   {/* --------------------------------------------FUNCTIONS AND VARIABLES TO TOGGLE THE SIDEBARS----------------------------------------------- */}
+
+  // Keeps track of whether the left and right sidebars are open or not.
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
+  // Toggles the left and right sidebars.
   const toggleLeftSidebar = () => {
     setIsLeftSidebarOpen(!isLeftSidebarOpen);
   };
@@ -32,6 +34,48 @@ function App() {
     setIsRightSidebarOpen(!isRightSidebarOpen);
   };
 
+  {/* --------------------------------------------FUNCTIONS AND VARIABLES TO ADD A LIST----------------------------------------------- */}
+  // A list of list names.
+  //This should eventually read from a database.
+  const [checkList, setCheckList] = useState(["list 1", "list 2", "list 3"]);
+
+  // Adds a new list name to the list.
+  // This should eventually write to a database.
+  const addCheckList = (newItem) => {
+    setCheckList([...checkList, newItem]);
+  }
+  
+  function createNewList(event) {
+    
+    // Creates a input field to enter a list name.
+    var listName = document.createElement('input');
+    listName.type = 'text';
+    listName.placeholder = 'List Name:';
+    listName.classList.add('list-name-input');
+    
+    document.querySelector(".list-container").appendChild(listName);
+    
+    listName.focus();
+    
+    listName.addEventListener('blur', () => {
+      // Checks if the list name given is blank.
+      if(listName.value == "") {
+        // If it is, removes the input field without adding a list.
+        listName.remove();
+        return;
+      }
+      else {
+        // If not, adds the list name to the list and removes the input field.
+        var ButtonText = listName.value;
+        addCheckList(ButtonText);
+        listName.remove();
+      }
+    });
+  }
+
+  // Changes the title of the list on display to the name of the list that was clicked.
+  // This should eventually change all the items to be the items in the list.
+  // It will need to read from a database, and have a way of using the list name as a key to find the items.
   function changeList(event) {
     var listName = event.target.textContent;
     var currentTitle = document.querySelector(".list-title");
@@ -42,69 +86,71 @@ function App() {
     }
 }
 
-  function newTask() {
-    var inputTaskName = document.createElement('input');
-    inputTaskName.type = 'text';
-    inputTaskName.placeholder = 'Task Name';
-    inputTaskName.classList.add('task-name-input');
-    document.querySelector(".task-container").appendChild(inputTaskName);
-    inputTaskName.focus();
-    inputTaskName.addEventListener('blur', function() {
-      if(inputTaskName.value == "") {
-        inputTaskName.remove();
-        return;
-      } else {
-        var taskButton = document.createElement('button');
-        taskButton.textContent = inputTaskName.value;
-        taskButton.classList.add('task-button');
-        document.querySelector(".task-container").appendChild(taskButton);
-        inputTaskName.remove();
-      } 
-    });
-  }
-  function newList() {
-
-    var inputListName = document.createElement('input');
-    inputListName.type = 'text';
-    inputListName.placeholder = 'List Name';
-    inputListName.classList.add('list-name-input');
-
+{/* --------------------------------------------FUNCTIONS AND VARIABLES TO EDIT A LIST----------------------------------------------- */}
+// This should eventually update the database to keep track of the changes.
+function editList(event, buttonType, index) {
+  
+  // Creates a input field to enter a new list name.
+  var listName = document.createElement('input');
+  listName.type = 'text';
+  listName.placeholder = 'Enter new list name:';
+  listName.classList.add('list-name-input');
+  document.querySelector(".list-container").appendChild(listName);
+  
+  listName.focus();
+  
+  listName.addEventListener('blur', () => {
     
+    // Checks if the list name given is blank.
+    if(listName.value == "") {
+      // If it is, removes the input field without changing the list name.
+      listName.remove();
+      return;
+    }
+    else {
+      // If not, changes the list name and removes the input field.
+      const updatedLists = [...checkList];
+      updatedLists[(buttonType, index)] = listName.value;
+      setCheckList(updatedLists);
 
-    document.querySelector(".list-container").appendChild(inputListName);
+      listName.remove();
+    }
+  });
+}
 
-    inputListName.focus();
+{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE DELETE LIST FORM----------------------------------------------- */}
+// Keeps track of the index of the list to be deleted.
+const [deletionIndex, setDeletionIndex] = useState(-1);
 
-    inputListName.addEventListener('blur', function() {
-      if(inputListName.value == "") {
-        inputListName.remove();
-        return;
-      } else {
-        
-        var listButton = document.createElement('button');
-        listButton.textContent = inputListName.value;
-        listButton.classList.add('list-button');
-        document.querySelector(".list-container").appendChild(listButton);
-        listButton.addEventListener('click', changeList);
-        
-        var editButton = document.createElement('button');
-        editButton.textContent = <p>E<FaPlusSquare /></p>;
-        editButton.classList.add('edit-button');
-        document.querySelector(".list-container").appendChild(editButton);
-        
-        var deleteButton = document.createElement('button');
-        deleteButton.textContent = <p>D<FaTrash /></p>;
-        deleteButton.classList.add('delete-button');
-        document.querySelector(".list-container").appendChild(deleteButton);
+// Makes the delete form visible and sets the deletion index to the index of the list to be deleted.
+const comfirmDeleteList = (event, targetIndex) => {
+  document.querySelector(".delete-form").style.display = "block";
+  setDeletionIndex(targetIndex);
+};
 
-        inputListName.remove();
-      }
-    });
-  }
+// Hides the delete form without deleting the list.
+const noDeleteList = () => {
+  document.querySelector(".delete-form").style.display = "none";
+}
+
+// Deletes the list and hides the delete form.
+// This should eventually delete the list from the database.
+const yesDeleteList = () => {
+  document.querySelector(".delete-form").style.display = "none";
+  const updatedCheckList = checkList.filter((_, index) => index !== deletionIndex);
+  setCheckList(updatedCheckList);
+}
 
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
   return (
     <div className="App">
+
+      {/* --------------------------------------------THE DELETE FORM------------------------------------------------- */}
+      <div className='delete-form'>
+        <p>Are you sure you want to delete this list?</p>
+        <button onClick={yesDeleteList} id='delete-yes' className='form-button'>Yes</button>
+        <button onClick={noDeleteList} id='delete-no' className='form-button'>No</button>
+      </div>
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
       <p className='placeholder'></p>
@@ -148,16 +194,20 @@ function App() {
 
           <h3>Check Lists</h3>
           <div className="list-container">
+            {checkList.map((item, index) => (
+              <div className='list-buttons'>
+                <button onClick={changeList} key={["main", index]} className="list-button">{item}</button>
+                <button onClick={(event) => editList(event, "edit", index)} key={["edit", index]} className="edit-button"><FaEdit /></button>
+                <button onClick={(event) => comfirmDeleteList(event, index)} key={["delete", index]} className="delete-button"><FaTrash /></button>
+              </div>
+            ))}
           </div>
 
           {/* left sidebar footer */}
           <footer className={`l-sidebar-footer ${isLeftSidebarOpen ? '' : 'collapsed'}`}>
-            <button onClick={newList} className="new-list">
+            <button onClick={createNewList} className="new-list">
               {<p>New List <FaPlusSquare /></p>}
             </button>
-            {/* <FaEdit />
-            <FaTrash />
-            <FaStar /> */}
           </footer>
 
         </div>

@@ -16,8 +16,7 @@
   background-color: var(--dark-gray-1);
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------------------ */
-/* EVERYTHING IN THE HEADER*/
+/* -------------------------------------------------------------EVERYTHING IN THE HEADER--------------------------------------------------------------- */
 /* The placeholder for the header*/
 .placeholder {
   margin: 0;
@@ -26,7 +25,7 @@
   height: 80px;
 }
 
-/* The main style for all headers*/
+/* The main style for all parts of the header*/
 .app-header {
   position: fixed;
   top: 0;
@@ -130,7 +129,6 @@
 /* The unique font for the app name in the middle part of the header*/
 .app-name {
   height: 3em;
-  pointer-events: none;
 }
 
 /* The search bar style in the middle part of the header*/
@@ -158,8 +156,7 @@
   display: none;
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------------------ */
-/* EVERYTHING IN THE SIDEBARS*/
+/* -----------------------------------------------------------EVERYTHING IN THE SIDEBARS----------------------------------------------------------------- */
 /* The styles for both the left and right sidebars*/
 .left-sidebar h3, .right-sidebar h3{
   text-align: center;
@@ -180,6 +177,7 @@
   transition: all 0.3s ease;
 }
 
+/*-----LEFT SIDEBAR CONTENT-----*/
 /* The left sidebar styles*/
 .left-sidebar {
   left: 0;
@@ -190,6 +188,60 @@
   transform: translateX(-100%);
 }
 
+/* The styles for the text box in the left sidebar that asks for a list name*/
+.list-name-input{
+  border: #1D2128 1px solid;
+  border-radius: 5px;
+  background-color: var(--dark-gray-2);
+  color: var(--light-gray-2);
+  width: 152px;
+}
+
+/* The grid for the list button container that has the list name, edit, and delete buttons*/
+.list-buttons{
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+}
+
+/* The styles fot all the list buttons in the left sidebar*/
+.list-button {
+  color: var(--light-gray-2);
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  border-top: transparent 1px solid;
+  border-bottom: transparent 1px solid;
+}
+.list-button:hover {
+  color: var(--accent-color-green);
+  border-top: var(--accent-color-green) 1px solid;
+  border-bottom: var(--accent-color-green) 1px solid;
+  border-radius: 10px;
+}
+
+/* The edit list button styles*/
+.edit-button{
+  color: var(--accent-color-green);
+  background-color: transparent;
+  border: transparent 1px solid;
+}
+.edit-button:hover{
+  border: var(--accent-color-green) 1px solid;
+  border-radius: 3px;
+}
+
+/* The delete list button styles*/
+.delete-button{
+  color: var(--accent-color-red);
+  background-color: transparent;
+  border: transparent 1px solid;
+}
+.delete-button:hover{
+  border: var(--accent-color-red) 1px solid;
+  border-radius: 3px;
+}
+
+/*-----RIGHT SIDEBAR CONTENT-----*/
 /* The right sidebar styles*/
 .right-sidebar {
   right: 0;
@@ -205,8 +257,7 @@
   transform: translateX(100%);
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------------------ */
-/* EVERYTHING IN THE MAIN CONTENT*/
+/* -------------------------------------------------------EVERYTHING IN THE MAIN CONTENT------------------------------------------------------ */
 /* The content style*/
 .content h3 {
   color: var(--light-gray-2);
@@ -234,14 +285,17 @@
   background-repeat: repeat;
   color: var(--light-gray-2);
 }
+/*if the left sidebar is closed*/
 .content.left {
   margin-left: 0;
   width: calc(100% - 267px);
 }
+/*if the right sidebar is closed*/
 .content.right {
   margin-right: 0;
   width: calc(100% - 192px);
 }
+/*if both sidebars are closed*/
 .content.right.left {
   width: 100%;
   margin-left: 0;
@@ -254,25 +308,9 @@
   scrollbar-color: var(--light-gray-1) var(--dark-gray-2);
 }
 
-/* The list button style*/
-.list-button {
-  color: var(--light-gray-2);
-  background-color: transparent;
-  border: none;
-  width: 100%;
-  border-top: transparent 1px solid;
-  border-bottom: transparent 1px solid;
-}
-.list-button:hover {
-  color: var(--accent-color-green);
-  border-top: var(--accent-color-green) 1px solid;
-  border-bottom: var(--accent-color-green) 1px solid;
-  border-radius: 10px;
-}
-/*------------------------------------------------------------------------------------------------------------------------------------ */
-/* EVERYTHING IN THE FOOTER*/
-/* The footer style*/
 
+/*-------------------------------------------------------------EVERYTHING IN THE FOOTER------------------------------------------------------------------ */
+/* The styles for all parts of the footer*/
 .main-footer, .l-sidebar-footer, .r-sidebar-footer{
   position: fixed;
   z-index: 3;
@@ -283,43 +321,33 @@
   display: flex;
   justify-content: center;
 }
+
+/* The middle part of the footer style*/
 .main-footer {
   width: calc(100% - 192px - 267px);
   border-top: var(--accent-color-red) 1px solid;
 }
+/*if the right sidebar is closed*/
 .main-footer.right{
   width: calc(100% - 192px);
 }
+/*if the left sidebar is closed*/
 .main-footer.left{
   width: calc(100% - 267px);
 }
+/*if both sidebars are closed*/
 .main-footer.right.left{
   width: 100%;
 }
+
+/* The left part of the footer style*/
 .l-sidebar-footer{
   left: 0;
   width: 192px;
   border-right: var(--accent-color-green) 1px solid;
 }
-.r-sidebar-footer{
-  right: 0;
-  width: 267px;
-  border-left: var(--accent-color-green) 1px solid;
-}
-p{
-  margin: 0;
-  padding: 0;
-}
 
-
-.list-name-input{
-  border: #1D2128 1px solid;
-  border-radius: 5px;
-  background-color: var(--dark-gray-2);
-  color: var(--light-gray-2);
-  width: 152px;
-}
-
+/* The new list button at the bottom of the left footer style*/
 .new-list{
   width: 100%;
   color: var(--accent-color-green);
@@ -328,5 +356,48 @@ p{
 }
 .new-list:hover{
   color: var(--dark-gray-1);
+  background-color: var(--accent-color-green);
+}
+
+/* The right part of the footer style*/
+.r-sidebar-footer{
+  right: 0;
+  width: 267px;
+  border-left: var(--accent-color-green) 1px solid;
+}
+
+p{
+  margin: 0;
+  padding: 0;
+}
+
+/*-------------------------------------------------EVERYTHING IN THE DELETE FORM----------------------------------------------------------------*/
+/* The delete form style*/
+.delete-form{
+  position: fixed;
+  width: 200px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--accent-color-red);
+  background-color: var(--dark-gray-2);
+  border: var(--accent-color-red) 1px solid;
+  border-radius: 5px;
+  z-index: 5;
+  line-height: 1.7em;
+  display: none;
+}
+
+/* The delete form button styles*/
+.form-button{
+  background-color: var(--accent-color-red);
+  color: var(--dark-gray-2);
+  border: none;
+  border-radius: 5px;
+  padding: 3px;
+  margin: 5px;
+}
+.form-button:hover{
   background-color: var(--accent-color-green);
 }
