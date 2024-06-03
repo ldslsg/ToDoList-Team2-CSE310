@@ -147,7 +147,7 @@ const yesDeleteList = () => {
 
       {/* --------------------------------------------THE DELETE FORM------------------------------------------------- */}
       <div className='delete-form'>
-        <p>Are you sure you want to delete this list?</p>
+        <p>Are you sure you want to <strong>delete</strong> this list?</p>
         <button onClick={yesDeleteList} id='delete-yes' className='form-button'>Yes</button>
         <button onClick={noDeleteList} id='delete-no' className='form-button'>No</button>
       </div>

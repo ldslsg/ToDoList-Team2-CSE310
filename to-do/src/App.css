@@ -390,14 +390,23 @@ p{
 }
 
 /* The delete form button styles*/
+.form-button p strong{
+  color: var(--accent-color-green);
+}
 .form-button{
   background-color: var(--accent-color-red);
   color: var(--dark-gray-2);
   border: none;
-  border-radius: 5px;
-  padding: 3px;
-  margin: 5px;
+  border-radius: 2px;
+  width: 50%;
+  height: 30px;
+  margin-top: 16px;
+  /* padding: 0; */
+  /* padding: 3px;
+  margin: 5px; */
 }
 .form-button:hover{
-  background-color: var(--accent-color-green);
+  background-color: transparent;
+  color: var(--accent-color-red);
+  border: var(--accent-color-red) 1px solid;
 }
