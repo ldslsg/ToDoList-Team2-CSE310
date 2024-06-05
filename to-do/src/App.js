@@ -1,4 +1,6 @@
 //npm run start
+
+//npm run install-all
 // images
 import logo from './images/checkmate-dark-02.png';
 import name from './images/checkmate-name-dark.png';
