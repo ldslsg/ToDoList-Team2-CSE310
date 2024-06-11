@@ -178,7 +178,7 @@ const hideAddItemForm = () => {
         <input type="text" className="list-item" id="list-description" placeholder="Description..." required/>
         <input type="text" className="list-item" id="Do-Date" placeholder="Due Date..." required/>
 
-        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+        <button type="submit" className="add-button" onClick={addItem}>Add</button>
         <button type="submit" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
       </form>
 
