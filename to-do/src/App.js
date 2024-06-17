@@ -155,6 +155,25 @@ const hideAddItemForm = () => {
   document.querySelector(".add-form").style.display = "none";
 }
 
+const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
+
+const [ListItem, setListItem] = useState({name:'', description:'', due_date:''});
+
+const saveItemInfo = (e) => {
+  const {name , value} = e.target;
+  setListItem({...ListItem, [name]: value})
+}
+
+const AddListItem = async (e) => {
+  const NewItem = [ListItem.name, ListItem.description, ListItem.due_date]
+  setListItems((prevListItems) => [
+    ...prevListItems,
+    NewItem
+  ]);
+  console.log (NewItem)
+  // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
+}
+
 
 
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
@@ -174,12 +193,12 @@ const hideAddItemForm = () => {
       <form className="add-form">
         <h3>Add new list item</h3>
 
-        <input type="text" className="list-item" id="list-name" placeholder="Name..." required/>
-        <input type="text" className="list-item" id="list-description" placeholder="Description..." required/>
-        <input type="text" className="list-item" id="Do-Date" placeholder="Due Date..." required/>
+        <input name = "name" type="text" className="list-item" value={ListItem.name} id="list-name" placeholder="Name..." onChange={saveItemInfo} required/>
+        <input name = 'description' type="text" className="list-item" value={ListItem.description} id="list-description" placeholder="Description..." onChange={saveItemInfo} required/>
+        <input name = "due_date" type="text" className="list-item" value={ListItem.due_date} id="Do-Date" placeholder="Due Date..." onChange={saveItemInfo} required/>
 
-        <button type="submit" className="add-button" onClick={addItem}>Add</button>
-        <button type="submit" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
+        <button className="add-button" onClick = {AddListItem} >Add</button> 
+        <button className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
       </form>
 
 
@@ -287,14 +306,14 @@ const hideAddItemForm = () => {
           <h3 className="list-title">Today's Tasks</h3>
           <button onClick={showAddItemForm}> {<FaPlusSquare />} </button>
           <ol className="currect-list" id='currectList'>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
+            {ListItems.map((item, index)=>(
+              <div key={index}>
+                <li key={["name", index]}>{ListItems[index][0]}</li>,
+                <p key={["description", index]}>{ListItems[index][1]}</p>,
+                <p key={["due_date", index]}>{ListItems[index][2]}</p> 
+              </div>
+            ))}
+
           </ol>
 
           {/* main content footer */}
