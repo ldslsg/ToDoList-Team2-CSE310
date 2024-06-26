@@ -1,4 +1,6 @@
 //npm run start
+
+//npm run install-all
 // images
 import logo from './images/checkmate-dark-02.png';
 import name from './images/checkmate-name-dark.png';
@@ -141,6 +143,20 @@ const yesDeleteList = () => {
   setCheckList(updatedCheckList);
 }
 
+{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE ADD ITEM FORM----------------------------------------------- */}
+
+// Makes the add item form visible. 
+const showAddItemForm = () => {
+  document.querySelector(".add-form").style.display = "block";
+}
+
+// Hides the add item form.
+const hideAddItemForm = () => {
+  document.querySelector(".add-form").style.display = "none";
+}
+
+
+
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
   return (
     <div className="App">
@@ -151,6 +167,22 @@ const yesDeleteList = () => {
         <button onClick={yesDeleteList} id='delete-yes' className='form-button'>Yes</button>
         <button onClick={noDeleteList} id='delete-no' className='form-button'>No</button>
       </div>
+
+
+      {/* --------------------------------------------Add Item Form------------------------------------------------- */}
+
+      <form className="add-form">
+        <h3>Add new list item</h3>
+
+        <input type="text" className="list-item" id="list-name" placeholder="Name..." required/>
+        <input type="text" className="list-item" id="list-description" placeholder="Description..." required/>
+        <input type="text" className="list-item" id="Do-Date" placeholder="Due Date..." required/>
+
+        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+        <button type="submit" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
+      </form>
+
+
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
       <p className='placeholder'></p>
@@ -253,7 +285,8 @@ const yesDeleteList = () => {
         <div className={`content ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
 
           <h3 className="list-title">Today's Tasks</h3>
-          <ol className="currect-list">
+          <button onClick={showAddItemForm}> {<FaPlusSquare />} </button>
+          <ol className="currect-list" id='currectList'>
             <li>Item 1</li>
             <li>Item 2</li>
             <li>Item 3</li>
@@ -262,28 +295,6 @@ const yesDeleteList = () => {
             <li>Item 6</li>
             <li>Item 1</li>
             <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
           </ol>
 
           {/* main content footer */}
