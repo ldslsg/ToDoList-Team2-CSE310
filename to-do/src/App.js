@@ -155,7 +155,15 @@ const hideAddItemForm = () => {
   document.querySelector(".add-form").style.display = "none";
 }
 
+{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE SIGN IN FORM----------------------------------------------- */}
 
+const showSignInForm = () => {
+  document.querySelector(".signin-form").style.display = "block";
+}
+
+const hideSignInForm = () => {
+  document.querySelector(".signin-form").style.display = "none";
+}
 
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
   return (
@@ -182,7 +190,17 @@ const hideAddItemForm = () => {
         <button type="submit" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
       </form>
 
+      {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
+      <form className="signin-form" onSubmit={hideAddItemForm}>
+        <h3>Sign In</h3>
 
+        <input type="text" className="authentication-item" id="username" placeholder="Username" required/>
+        <input type="text" className="authentication-item" id="password" placeholder="Password" required/>
+
+        <button type="submit" className="submit-button">Submit</button>
+        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+        <button type="button" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
+      </form>
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
       <p className='placeholder'></p>
@@ -211,7 +229,10 @@ const hideAddItemForm = () => {
         <div className={`r-sidebar-header ${isRightSidebarOpen ? '' : 'collapsed'}`}>
 
           <h5 className={`username ${isRightSidebarOpen ? '' : 'collapsed'}`}>username</h5>
-          <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div>
+          {/* <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div> */}
+          <button onClick={showSignInForm} style={{ border: 'none', padding: 0, background: 'none' }}>
+            <img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" style={{ cursor: 'pointer' }} />
+          </button>
           <button onClick={toggleRightSidebar} className={`toggle-button-r ${isRightSidebarOpen ? '' : 'collapsed'}`}>
             {isRightSidebarOpen ? <RiArrowRightWideFill /> : <RiArrowLeftWideFill />}
           </button>
