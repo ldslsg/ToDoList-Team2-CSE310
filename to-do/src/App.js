@@ -20,6 +20,13 @@ import React, { useState } from 'react';
 
 function App() {
 
+  const data = {
+    description: 'test',
+    status: 'incomplete'
+  };
+
+ 
+
 
   {/* --------------------------------------------FUNCTIONS AND VARIABLES TO TOGGLE THE SIDEBARS----------------------------------------------- */}
 
@@ -39,7 +46,7 @@ function App() {
   {/* --------------------------------------------FUNCTIONS AND VARIABLES TO ADD A LIST----------------------------------------------- */}
   // A list of list names.
   //This should eventually read from a database.
-  const [checkList, setCheckList] = useState(["list 1", "list 2", "list 3"]);
+  const [checkList, setCheckList] = useState([]);
 
   // Adds a new list name to the list.
   // This should eventually write to a database.
