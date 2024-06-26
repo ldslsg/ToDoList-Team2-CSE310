@@ -12,10 +12,10 @@ const initializeDatabase = async () => {
      await db.exec(`
       CREATE TABLE IF NOT EXISTS list (
         list_id INTEGER PRIMARY KEY AUTOINCREMENT,
-         list_title TEXT NOT NULL,
+        list_title TEXT NOT NULL,
         list_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         user_id INTEGER NOT NULL,
-         FOREIGN KEY(user_id) REFERENCES user(user_id))
+        FOREIGN KEY(user_id) REFERENCES user(user_id))
      `);
      await db.exec(`
       CREATE TABLE IF NOT EXISTS to_dos (
