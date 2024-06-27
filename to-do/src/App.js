@@ -19,8 +19,10 @@ import React, { useState } from 'react';
 
 
 function App() {
-
-
+  {/* USER IMG AND INFO*/}
+  const [userImage, setUserImage] = useState('https://fakeimg.pl/50x50');
+  const [username, setUsername] = useState("username");
+  
   {/* --------------------------------------------FUNCTIONS AND VARIABLES TO TOGGLE THE SIDEBARS----------------------------------------------- */}
 
   // Keeps track of whether the left and right sidebars are open or not.
@@ -158,11 +160,47 @@ const hideAddItemForm = () => {
 {/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE SIGN IN FORM----------------------------------------------- */}
 
 const showSignInForm = () => {
+  document.querySelector(".new-user-form").style.display = "none";
   document.querySelector(".signin-form").style.display = "block";
 }
 
 const hideSignInForm = () => {
   document.querySelector(".signin-form").style.display = "none";
+}
+
+const submitSignInForm = () => {
+  const formUsername = document.querySelector('#username').value;
+  const formPass = document.querySelector('#password').value;
+
+  {/* Telemetry for testing the gathering of variables */}
+  console.log('Username:', formUsername);
+  console.log('Password:', formPass);
+
+  setUsername(formUsername || 'username'); // Update username, default to 'username'
+  //setUserImage('new image URL here');
+}
+
+{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE NEW USER FORM----------------------------------------------- */}
+
+const showNewUserForm = () => {
+  document.querySelector(".signin-form").style.display = "none";
+  document.querySelector(".new-user-form").style.display = "block";
+}
+
+const hideNewUserForm = () => {
+  document.querySelector(".new-user-form").style.display = "none";
+}
+
+const submitNewUserForm = () => {
+  const formNewUsername = document.querySelector('#new-username').value;
+  const formNewPass = document.querySelector('#new-password').value;
+
+  {/* Telemetry for testing the gathering of variables */}
+  console.log('Username:', formNewUsername);
+  console.log('Password:', formNewPass);
+
+  setUsername(formNewUsername || 'username'); // Update username, default to 'username'
+  //setUserImage('new image URL here');
 }
 
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
@@ -191,7 +229,7 @@ const hideSignInForm = () => {
       </form>
 
       {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
-      <form className="signin-form" onSubmit={hideAddItemForm}>
+      <form className="signin-form" onSubmit={submitSignInForm}>
         <h3>Sign In</h3>
 
         <input type="text" className="authentication-item" id="username" placeholder="Username" required/>
@@ -199,7 +237,21 @@ const hideSignInForm = () => {
 
         <button type="submit" className="submit-button">Submit</button>
         {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-        <button type="button" className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
+        <button type="button" className="cancel-button" onClick={hideSignInForm}>Cancel</button>
+        <button type="button" className="new-user-button" onClick={showNewUserForm}>New User</button>
+      </form>
+
+      {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
+      <form className="new-user-form" onSubmit={submitNewUserForm}>
+        <h3>Register as a New User</h3>
+
+        <input type="text" className="authentication-item" id="new-username" placeholder="Username" required/>
+        <input type="text" className="authentication-item" id="new-password" placeholder="Password" required/>
+
+        <button type="submit" className="submit-new-button">Submit</button>
+        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+        <button type="button" className="cancel-button" onClick={hideNewUserForm}>Cancel</button>
+        <button type="button" className="signin-button" onClick={showSignInForm}>Existing User</button>
       </form>
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
@@ -227,11 +279,12 @@ const hideSignInForm = () => {
 
         {/* right sidebar header */}
         <div className={`r-sidebar-header ${isRightSidebarOpen ? '' : 'collapsed'}`}>
-
-          <h5 className={`username ${isRightSidebarOpen ? '' : 'collapsed'}`}>username</h5>
+          {/* Replace "username" at end of line with current signin username, keep username as default placeholder?? */}
+          <h5 className={`username ${isRightSidebarOpen ? '' : 'collapsed'}`}>{username}</h5>
           {/* <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div> */}
           <button onClick={showSignInForm} style={{ border: 'none', padding: 0, background: 'none' }}>
-            <img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" style={{ cursor: 'pointer' }} />
+            {/* Replace image with user img on login?? Keep fake as default, have this call a variable grabbing userimg */}
+            <img src={userImage} className="user-img" alt="user img" style={{ cursor: 'pointer' }} />
           </button>
           <button onClick={toggleRightSidebar} className={`toggle-button-r ${isRightSidebarOpen ? '' : 'collapsed'}`}>
             {isRightSidebarOpen ? <RiArrowRightWideFill /> : <RiArrowLeftWideFill />}
