@@ -1,19 +1,20 @@
 const {createTodo} = require('../model/todoModel');
   
-  async function createNewTodo(req, res) {
+  async function getAllTodosByListID(req, res) {
     try {
-      const { description, status } = req.body;
-      await createTodo(description, status);
-      res.status(201).json({ message: 'To-do created' });
-      console.log('To-do created');
+      const { listID } = req.body;
+      const lists = await allTodosByListID(listID);
+      res.status(201).json({ message: 'Todos Returned', lists });
+      console.log('Todos returned');
+      console.log(lists);
     } catch (error) {
-      console.error('Error creating to-do item:', error);
+      console.error('Error getting Todos:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   }
   
 
   module.exports = {
-    createNewTodo,
+    getAllTodosByListID,
   };
   

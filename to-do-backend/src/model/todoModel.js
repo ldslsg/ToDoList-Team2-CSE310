@@ -8,6 +8,18 @@ async function createTodo(description, status) {
   );
   return result;
 }
+
+async function allTodosByListID(listID) {
+  const db = await openDb();
+  const result = await db.all(
+    'SELECT * FROM to_dos WHERE list_id = ?',
+    [listID]
+  );
+  return result;
+}
+
+
 module.exports = {
-  createTodo
+  createTodo,
+  allTodosByListID
 };

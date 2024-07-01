@@ -10,6 +10,7 @@ router.post('/newTodo', todoController.createNewTodo);
 router.post('/newList', listController.createList);
 router.post('/newUser', userController.createNewUser);
 router.get('/getAllLists', listController.getAllLists);
+router.get('/getAllTodosByListID', todoController.getAllTodosByListID);
 router.put('/changeEmail', userController.changeEmailUser);
 router.put('/changePassword', userController.changePasswordUser);
 router.put('/editList', listController.editListName);
