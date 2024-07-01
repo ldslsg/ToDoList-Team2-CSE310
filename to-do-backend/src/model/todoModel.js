@@ -18,8 +18,27 @@ async function allTodosByListID(listID) {
   return result;
 }
 
+async function allTodosByDate(date) {
+  const db = await openDb();
+  const result = await db.all(
+    'SELECT * FROM to_dos WHERE deadline_date = ?',
+    [date]
+  );
+  return result;
+}
+
+async function allTodosByPriority(priority) {
+  const db = await openDb();
+  const result = await db.all(
+    'SELECT * FROM to_dos WHERE priority = ?',
+    [priority]
+  );
+  return result;
+}
 
 module.exports = {
   createTodo,
-  allTodosByListID
+  allTodosByListID,
+  allTodosByDate,
+  allTodosByPriority
 };
