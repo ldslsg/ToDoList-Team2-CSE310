@@ -24,8 +24,10 @@ async function editListName(req, res) {
   }
 async function getAllLists(req, res) {
   try {
-    const { userID } = req.body;
+    const { userID } = req.query;
+    console.log('Received userID:', userID);
     const lists = await allLists(userID);
+    console.log('Lists returned:', lists);
     res.status(201).json({ message: 'Lists Returned', lists });
     console.log('Lists returned');
     console.log(lists);

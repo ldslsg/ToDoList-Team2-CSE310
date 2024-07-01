@@ -27,6 +27,7 @@ async function allLists(userID) {
     'SELECT * FROM list WHERE user_id = ?',
     [userID]
   );
+  console.log('Query Result:', result);
   return result;
 }
 
