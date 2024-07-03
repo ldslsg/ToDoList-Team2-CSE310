@@ -1,4 +1,4 @@
-const {createTodo, deleteTodo} = require('../model/todoModel');
+const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPriority} = require('../model/todoModel');
 async function createNewTodo(req, res) {
   try {
     const {nameTodo, description, deadline_date,  priority, list_id} = req.body;
@@ -22,9 +22,49 @@ async function deleteTodos(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+async function getAllTodosByListID(req, res) {
+  try {
+    const { listID } = req.body;
+    const lists = await allTodosByListID(listID);
+    res.status(201).json({ message: 'Todos Returned', lists });
+    console.log('Todos returned');
+    console.log(lists);
+  } catch (error) {
+    console.error('Error getting Todos:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
+async function getAllTodosByDate(req, res) {
+  try {
+    const { date } = req.body;
+    const lists = await allTodosByDate(date);
+    res.status(201).json({ message: 'Todos Returned', lists });
+    console.log('Todos returned');
+    console.log(lists);
+  } catch (error) {
+    console.error('Error getting Todos:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getAllTodosByPriority(req, res) {
+  try {
+    const { priority } = req.body;
+    const lists = await allTodosByPriority(priority);
+    res.status(201).json({ message: 'Todos Returned', lists });
+    console.log('Todos returned');
+    console.log(lists);
+  } catch (error) {
+    console.error('Error getting Todos:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
   module.exports = {
     createNewTodo,
-    deleteTodos
+    deleteTodos,
+    getAllTodosByListID,
+    getAllTodosByDate,
+    getAllTodosByPriority
   };
   
