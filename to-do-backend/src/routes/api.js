@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const todoController = require('../controller/todoController');
@@ -6,6 +5,7 @@ const userController = require('../controller/userController');
 const listController = require('../controller/listController');
 
 router.post('/newTodo', todoController.createNewTodo);
+router.delete('/deleteTodo', todoController.deleteTodo);
 
 router.post('/newList', listController.createList);
 router.post('/newUser', userController.createNewUser);
