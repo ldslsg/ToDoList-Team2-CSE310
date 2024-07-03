@@ -40,10 +40,12 @@ async function getAllLists(req, res) {
 async function createList(req, res) {
   try {
     const { listName, userID } = req.body;
-    const result = await newList(listName, userID);
-    const listID = result.lastID; 
-    res.status(201).json({ message: 'List created', listID: listID });
-    console.log('List created with ID:', listID);
+    if (!userID) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    await newList(listName, userID);
+    res.status(201).json({ message: 'List created' });
+    console.log('List created');
   } catch (error) {
     console.error('Error creating new list:', error);
     res.status(500).json({ message: 'Internal server error' });

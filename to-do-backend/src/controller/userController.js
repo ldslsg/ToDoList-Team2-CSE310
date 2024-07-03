@@ -1,4 +1,6 @@
-const {changeEmail, newUser, changePassword} = require('../model/userModels');
+const {changeEmail, newUser, changePassword, findUserByEmail} = require('../model/userModels');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt'); 
   
 async function changeEmailUser(req, res) {
   try {
@@ -23,6 +25,7 @@ async function changePasswordUser(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 async function createNewUser(req, res) {
   try {
     const { email, password } = req.body;
@@ -34,9 +37,36 @@ async function createNewUser(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }  
+
+// login
+async function loginUser(req, res) {
+  try {
+    const { email, password } = req.body;
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Include userId in the token payload
+    console.log('User ID being included in token:', user.user_id); // Log the user ID
+    const token = jwt.sign({ userId: user.user_id, email: user.email }, 'secretToken', { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token: token });
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
 module.exports = {
     changePasswordUser,
     createNewUser,
-    changeEmailUser
+    changeEmailUser,
+    loginUser
   };
   

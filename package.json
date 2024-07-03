@@ -13,7 +13,17 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "assert": "^2.1.0",
     "axios": "^1.7.2",
-    "react-modal": "^3.16.1"
+    "bcrypt": "^5.1.1",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "react-app-rewired": "^2.2.1",
+    "react-modal": "^3.16.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0"
   }
 }

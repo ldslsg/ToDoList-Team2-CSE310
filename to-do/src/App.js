@@ -18,12 +18,13 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 // axios - javascript library to perform HTTP request - https://www.npmjs.com/package/axios < documentation if needed.
 import axios from "axios";
+import jwt from "jsonwebtoken"; // token - session management / authentication
 
 function App() {
   {
     /* USER IMG AND INFO*/
   }
-  const [userImage, setUserImage] = useState("https://fakeimg.pl/50x50");
+  const [userImage, setUserImage] = useState("https://avatar.iran.liara.run/public"); // got random avatars from https://avatar-placeholder.iran.liara.run/#document
   const [username, setUsername] = useState("username");
 
   {
@@ -47,49 +48,64 @@ function App() {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO ADD A LIST----------------------------------------------- */
   }
   // A list of list names.
-  //This should eventually read from a database.
+
+  const [userID, setUserID] = useState(null); // New state to store user ID
   const [checkList, setCheckList] = useState([]);
-  const userID = 2; // Hardcoded user ID for now - after figuring out authentication/login it will change to be dynamic.
 
   //fetching data from db
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = jwt.decode(token); // token decodification
+      setUsername(user.email);
+      setUserID(user.userId); //decoded user info
+    }
+
+    if (userID) {
+      fetchLists(userID);
+    }
+  }, [userID]);
+
+  const fetchLists = (userID) => {
     axios
       .get("http://localhost:3000/api/getAllLists", {
-        params: { userID: userID }, // You can change this when implementing authentication
+        params: { userID: userID },
       })
       .then((response) => {
-        console.log("Fetched lists:", response.data.lists); // Debugging log
         setCheckList(response.data.lists);
       })
       .catch((error) => {
         console.error("Error fetching lists:", error);
       });
-  }, []);
-
-  // Adds a new list name to the list.
-  // This should eventually write to a database.
-  const addCheckList = (newItem) => {
-    // Send the new list to the backend
-    axios
-      .post("/api/newList", {
-        listName: newItem,
-        userID: userID,
-      })
-      .then((response) => {
-        const newListID = response.data.listID; // Get the listID from the response
-        // Update the frontend state with the new list object
-        setCheckList([
-          ...checkList,
-          { list_title: newItem, list_id: newListID },
-        ]);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.error("Error creating new list:", error);
-      });
   };
 
+  // Adds a new list name to the list.
+
+  const addCheckList = (newItem) => {
+    const token = localStorage.getItem("token");
+    // send new list to the backend with the info from the token
+    if (token) {
+      const user = jwt.decode(token);
+      axios
+        .post("http://localhost:3000/api/newList", {
+          listName: newItem,
+          userID: user.userId,
+        })
+        .then((response) => {
+          const newListID = response.data.listID; 
+          // updating state on the frontend with the new list object created
+          setCheckList((prevCheckList) => [
+            ...prevCheckList,
+            { list_title: newItem, list_id: newListID },
+          ]);
+          fetchLists(user.userId);
+        })
+        .catch((error) => {
+          console.error("Error creating new list:", error);
+        });
+    }
+  };
 
   function createNewList(event) {
     // Creates a input field to enter a list name.
@@ -133,32 +149,6 @@ function App() {
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO EDIT A LIST----------------------------------------------- */
   }
-  // This should eventually update the database to keep track of the changes.
-  // function editList(event, buttonType, index) {
-  //   // Creates a input field to enter a new list name.
-  //   var listName = document.createElement("input");
-  //   listName.type = "text";
-  //   listName.placeholder = "Enter new list name:";
-  //   listName.classList.add("list-name-input");
-  //   document.querySelector(".list-container").appendChild(listName);
-
-  //   listName.focus();
-
-  //   listName.addEventListener("blur", () => {
-  //     // Checks if the list name given is blank.
-  //     if (listName.value == "") {
-  //       // If it is, removes the input field without changing the list name.
-  //       listName.remove();
-  //       return;
-  //     } else {
-  //       // If not, changes the list name and removes the input field.
-  //       const updatedLists = [...checkList];
-  //       updatedLists[(buttonType, index)] = listName.value;
-  //       setCheckList(updatedLists);
-
-  //       listName.remove();
-  //     }
-  //   });
 
   // Otavio's Version
 
@@ -173,28 +163,32 @@ function App() {
     listName.focus();
 
     listName.addEventListener("blur", () => {
-      // Checks if the list name given is blank.
+      // checking if the list name given is blank.
       if (listName.value === "") {
         // If it is, removes the input field without changing the list name.
         listName.remove();
         return;
       } else {
         // If not, changes the list name and removes the input field.
-        const updatedLists = [...checkList];
         const newName = listName.value;
-        const listID = updatedLists[index].list_id; // getting id
-        console.log(listID);
-        updatedLists[index].list_title = newName;
-        setCheckList(updatedLists);
+        const listID = checkList[index].list_id; // getting id
 
         // Send the updated list name to the backend
         axios
           .put("http://localhost:3000/api/editList", {
-            listID: listID, // Assuming list IDs are 1-based and sequential
+            listID: listID,
             newName: newName,
           })
           .then((response) => {
             console.log(response.data.message);
+            // update state to get updated list
+            setCheckList((prevCheckList) =>
+              prevCheckList.map((list) =>
+                list.list_id === listID
+                  ? { ...list, list_title: newName }
+                  : list
+              )
+            );
           })
           .catch((error) => {
             console.error("Error updating list:", error);
@@ -230,19 +224,22 @@ function App() {
     //Otavio's code for delete feature
     const listID = checkList[deletionIndex].list_id; //will get the right id
 
-      //api call
-  axios.delete('http://localhost:3000/api/deleteList', { data: { listID: listID } })
-  .then(response => {
-    console.log(response.data.message);
-    // new state
-    const updatedCheckList = checkList.filter(
-      (_, index) => index !== deletionIndex
-    );
-    setCheckList(updatedCheckList);
-  })
-  .catch(error => {
-    console.error('Error deleting list:', error);
-  });
+    //api call
+    axios
+      .delete("http://localhost:3000/api/deleteList", {
+        data: { listID: listID },
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        // new state
+        const updatedCheckList = checkList.filter(
+          (_, index) => index !== deletionIndex
+        );
+        setCheckList(updatedCheckList);
+      })
+      .catch((error) => {
+        console.error("Error deleting list:", error);
+      });
 
     const updatedCheckList = checkList.filter(
       (_, index) => index !== deletionIndex
@@ -269,26 +266,64 @@ function App() {
   }
 
   const showSignInForm = () => {
-    document.querySelector(".new-user-form").style.display = "none";
+    const token = localStorage.getItem("token");
+    if (token) {
+      showLogoutForm(); // Show logout confirmation if user is logged in
+    } else {
+          // make sure the info from last user is gone
+    document.querySelector("#username").value = '';
+    document.querySelector("#password").value = '';
     document.querySelector(".signin-form").style.display = "block";
+    }
   };
 
   const hideSignInForm = () => {
     document.querySelector(".signin-form").style.display = "none";
   };
 
-  const submitSignInForm = () => {
+  const submitSignInForm = (event) => {
+    event.preventDefault(); 
     const formUsername = document.querySelector("#username").value;
     const formPass = document.querySelector("#password").value;
 
-    {
-      /* Telemetry for testing the gathering of variables */
-    }
-    console.log("Username:", formUsername);
-    console.log("Password:", formPass);
+    // login request
+    axios
+      .post("http://localhost:3000/api/login", {
+        email: formUsername,
+        password: formPass,
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        localStorage.setItem("token", response.data.token); // saving the token to localStorage
+        const user = jwt.decode(response.data.token); // decoding the token to get user info
+        setUsername(user.email); // Update username
+        setUserID(user.userId); // Update userID
+        fetchLists(user.userId); // fetch updated list by userID
+        hideSignInForm();
+      })
+      .catch((error) => {
+        console.error("Error logging in:", error);
+      });
+  };
 
-    setUsername(formUsername || "username"); // Update username, default to 'username'
-    //setUserImage('new image URL here');
+  {
+    /* --------------------------------------------LOGOUT----------------------------------------------- */
+  }
+
+  const logoutUser = () => {
+    localStorage.removeItem('token');
+    setUsername("username");
+    setUserID(null);
+    setCheckList([]);
+    hideLogoutForm(); 
+  };
+
+  const showLogoutForm = () => {
+    document.querySelector(".logout-form").style.display = "block";
+  };
+
+  const hideLogoutForm = () => {
+    document.querySelector(".logout-form").style.display = "none";
   };
 
   {
@@ -308,14 +343,18 @@ function App() {
     const formNewUsername = document.querySelector("#new-username").value;
     const formNewPass = document.querySelector("#new-password").value;
 
-    {
-      /* Telemetry for testing the gathering of variables */
-    }
-    console.log("Username:", formNewUsername);
-    console.log("Password:", formNewPass);
-
-    setUsername(formNewUsername || "username"); // Update username, default to 'username'
-    //setUserImage('new image URL here');
+    // backend request
+    axios
+      .post("http://localhost:3000/api/newUser", {
+        email: formNewUsername,
+        password: formNewPass,
+      })
+      .then((response) => {
+        hideNewUserForm();
+      })
+      .catch((error) => {
+        console.error("Error creating new user:", error);
+      });
   };
 
   {
@@ -387,7 +426,7 @@ function App() {
           />
           <p className="forgot">forgot Username</p>
           <input
-            type="text"
+            type="password"
             className="authentication-item"
             id="password"
             placeholder="Password"
@@ -458,6 +497,18 @@ function App() {
           </div>
         </div>
       </form>
+ {/* --------------------------------------------LOGOUT MODAL---------------------------------------------- */}
+      <div className="logout-form" style={{ display: "none" }}>
+        <p>
+          Are you sure you want to <strong>logout</strong>?
+        </p>
+        <button onClick={logoutUser} className="form-button">
+          Yes
+        </button>
+        <button onClick={hideLogoutForm} className="form-button">
+          No
+        </button>
+      </div>
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
       <p className="placeholder"></p>

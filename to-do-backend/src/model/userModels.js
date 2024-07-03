@@ -1,4 +1,5 @@
 const { openDb } = require('../db');
+const bcrypt = require('bcrypt');
 
 async function changeEmail(newEmail, password) {
   const db = await openDb();
@@ -16,16 +17,29 @@ async function changePassword(email, newPassword) {
     );
     return result;
   }
+
 async function newUser(email, password) {
     const db = await openDb();
+    const hashedPassword = await bcrypt.hash(password, 10);
     const result = await db.run(
-    'INSERT INTO user (email, password) VALUES (?, ?)',
-    [email, password]
+        'INSERT INTO user (email, password) VALUES (?, ?)',
+        [email, hashedPassword]
     );
     return result;
-  }
+}
+
+async function findUserByEmail(email) {
+  const db = await openDb();
+  const user = await db.get(
+    'SELECT * FROM user WHERE email = ?',
+    [email]
+  );
+  return user;
+}
+
 module.exports = {
     newUser,
     changePassword,
-    changeEmail
+    changeEmail,
+    findUserByEmail
 };
