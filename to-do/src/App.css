@@ -430,12 +430,12 @@ p{
   display: none;
 }
 
-/* -------------------------------------------------EVERYTHING IN THE SIGN IN FORM------------------------------------------------------------------ */
+/* ---------------------------------------------EVERYTHING IN THE NEW USER FORM AND SIGN IN FORM----------------------------------------------------- */
 
-.signin-form{
+.new-user-form, .signin-form{
   position: fixed;
-  /* width: 200px;
-  height: 100px; */
+  width: 40%;
+  height: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -444,24 +444,42 @@ p{
   border: var(--accent-color-green) 1px solid;
   border-radius: 5px;
   z-index: 5;
-  line-height: 1.7em;
+  line-height: 0.5em;
   display: none;
 }
-
-/* -------------------------------------------------EVERYTHING IN THE NEW USER FORM------------------------------------------------------------------ */
-
-.new-user-form{
-  position: fixed;
-  /* width: 200px;
-  height: 100px; */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--accent-color-green);
-  background-color: var(--dark-gray-2);
-  border: var(--accent-color-green) 1px solid;
+.flex-signin-form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.authentication-item{
+  height: 30px;
+}
+.forgot{
+  text-decoration: underline;
+  font-size:small;
+}
+.button-container{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: calc(100% - 40px);
+}
+.signin-button{
+  background-color: var(--accent-color-green);
+  color: var(--dark-gray-2);
+  border: none;
   border-radius: 5px;
-  z-index: 5;
-  line-height: 1.7em;
-  display: none;
+  width: 200px;
+  height: 20px;
+  margin-top: 16px;
+}
+.signin-button:hover{
+  background-color: transparent;
+  color: var(--accent-color-green);
+  border: var(--accent-color-green) 1px solid;
 }

@@ -307,80 +307,36 @@ function App() {
 
       {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
       <form className="signin-form" onSubmit={submitSignInForm}>
-        <h3>Sign In</h3>
+        <div className='flex-signin-form'>
+          <h3>Sign In</h3>
 
-        <input
-          type="text"
-          className="authentication-item"
-          id="username"
-          placeholder="Username"
-          required
-        />
-        <input
-          type="text"
-          className="authentication-item"
-          id="password"
-          placeholder="Password"
-          required
-        />
-
-        <button type="submit" className="submit-button">
-          Submit
-        </button>
-        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-        <button
-          type="button"
-          className="cancel-button"
-          onClick={hideSignInForm}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="new-user-button"
-          onClick={showNewUserForm}
-        >
-          New User
-        </button>
+          <input type="text" className="authentication-item" id="username" placeholder="Username" required/>
+          <p className='forgot'>forgot Username</p>
+          <input type="text" className="authentication-item" id="password" placeholder="Password" required/>
+          <p className='forgot'>forgot Password</p>
+          <div className='button-container'>
+            <button type="submit" className="signin-button">Submit</button>
+            {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+            <button type="button" className="signin-button" onClick={hideSignInForm}>Cancel</button>
+            <button type="button" className="signin-button" onClick={showNewUserForm}>New User</button>
+          </div>
+        </div>
       </form>
 
       {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
       <form className="new-user-form" onSubmit={submitNewUserForm}>
-        <h3>Register as a New User</h3>
+        <div className='flex-signin-form'>
+          <h3>Register as a New User</h3>
 
-        <input
-          type="text"
-          className="authentication-item"
-          id="new-username"
-          placeholder="Username"
-          required
-        />
-        <input
-          type="text"
-          className="authentication-item"
-          id="new-password"
-          placeholder="Password"
-          required
-        />
-
-        <button type="submit" className="submit-new-button">
-          Submit
-        </button>
-        {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-        <button
-          type="button"
-          className="cancel-button"
-          onClick={hideNewUserForm}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="signin-button"
-          onClick={showSignInForm}
-        >
-          Existing User
-        </button>
+          <input type="text" className="authentication-item" id="new-username" placeholder="Username" required/>
+          <input type="text" className="authentication-item" id="new-password" placeholder="Password" required/>
+          <div className='button-container'>
+            <button type="submit" className="signin-button">Submit</button>
+            {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+            <button type="button" className="signin-button" onClick={hideNewUserForm}>Cancel</button>
+            <button type="button" className="signin-button" onClick={showSignInForm}>Existing User</button>
+          </div>
+        </div>
       </form>
 
       {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
