@@ -53,13 +53,14 @@ function App() {
 
   //fetching data from db
 
-  useEffect(() => {    
+  useEffect(() => {
     axios
       .get("http://localhost:3000/api/getAllLists", {
         params: { userID: userID }, // You can change this when implementing authentication
       })
       .then((response) => {
-        setCheckList(response.data.lists.map((list) => list.list_title));
+        console.log("Fetched lists:", response.data.lists); // Debugging log
+        setCheckList(response.data.lists);
       })
       .catch((error) => {
         console.error("Error fetching lists:", error);
@@ -69,21 +70,26 @@ function App() {
   // Adds a new list name to the list.
   // This should eventually write to a database.
   const addCheckList = (newItem) => {
-    setCheckList([...checkList, newItem]);
-
     // Send the new list to the backend
     axios
       .post("/api/newList", {
         listName: newItem,
-        userID: 2,
+        userID: userID,
       })
       .then((response) => {
+        const newListID = response.data.listID; // Get the listID from the response
+        // Update the frontend state with the new list object
+        setCheckList([
+          ...checkList,
+          { list_title: newItem, list_id: newListID },
+        ]);
         console.log(response.data.message);
       })
       .catch((error) => {
         console.error("Error creating new list:", error);
       });
   };
+
 
   function createNewList(event) {
     // Creates a input field to enter a list name.
@@ -128,8 +134,36 @@ function App() {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO EDIT A LIST----------------------------------------------- */
   }
   // This should eventually update the database to keep track of the changes.
-  function editList(event, buttonType, index) {
-    // Creates a input field to enter a new list name.
+  // function editList(event, buttonType, index) {
+  //   // Creates a input field to enter a new list name.
+  //   var listName = document.createElement("input");
+  //   listName.type = "text";
+  //   listName.placeholder = "Enter new list name:";
+  //   listName.classList.add("list-name-input");
+  //   document.querySelector(".list-container").appendChild(listName);
+
+  //   listName.focus();
+
+  //   listName.addEventListener("blur", () => {
+  //     // Checks if the list name given is blank.
+  //     if (listName.value == "") {
+  //       // If it is, removes the input field without changing the list name.
+  //       listName.remove();
+  //       return;
+  //     } else {
+  //       // If not, changes the list name and removes the input field.
+  //       const updatedLists = [...checkList];
+  //       updatedLists[(buttonType, index)] = listName.value;
+  //       setCheckList(updatedLists);
+
+  //       listName.remove();
+  //     }
+  //   });
+
+  // Otavio's Version
+
+  const editList = (event, buttonType, index) => {
+    // Creates an input field to enter a new list name.
     var listName = document.createElement("input");
     listName.type = "text";
     listName.placeholder = "Enter new list name:";
@@ -140,20 +174,36 @@ function App() {
 
     listName.addEventListener("blur", () => {
       // Checks if the list name given is blank.
-      if (listName.value == "") {
+      if (listName.value === "") {
         // If it is, removes the input field without changing the list name.
         listName.remove();
         return;
       } else {
         // If not, changes the list name and removes the input field.
         const updatedLists = [...checkList];
-        updatedLists[(buttonType, index)] = listName.value;
+        const newName = listName.value;
+        const listID = updatedLists[index].list_id; // getting id
+        console.log(listID);
+        updatedLists[index].list_title = newName;
         setCheckList(updatedLists);
+
+        // Send the updated list name to the backend
+        axios
+          .put("http://localhost:3000/api/editList", {
+            listID: listID, // Assuming list IDs are 1-based and sequential
+            newName: newName,
+          })
+          .then((response) => {
+            console.log(response.data.message);
+          })
+          .catch((error) => {
+            console.error("Error updating list:", error);
+          });
 
         listName.remove();
       }
     });
-  }
+  };
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE DELETE LIST FORM----------------------------------------------- */
@@ -176,6 +226,24 @@ function App() {
   // This should eventually delete the list from the database.
   const yesDeleteList = () => {
     document.querySelector(".delete-form").style.display = "none";
+
+    //Otavio's code for delete feature
+    const listID = checkList[deletionIndex].list_id; //will get the right id
+
+      //api call
+  axios.delete('http://localhost:3000/api/deleteList', { data: { listID: listID } })
+  .then(response => {
+    console.log(response.data.message);
+    // new state
+    const updatedCheckList = checkList.filter(
+      (_, index) => index !== deletionIndex
+    );
+    setCheckList(updatedCheckList);
+  })
+  .catch(error => {
+    console.error('Error deleting list:', error);
+  });
+
     const updatedCheckList = checkList.filter(
       (_, index) => index !== deletionIndex
     );
@@ -307,34 +375,86 @@ function App() {
 
       {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
       <form className="signin-form" onSubmit={submitSignInForm}>
-        <div className='flex-signin-form'>
+        <div className="flex-signin-form">
           <h3>Sign In</h3>
 
-          <input type="text" className="authentication-item" id="username" placeholder="Username" required/>
-          <p className='forgot'>forgot Username</p>
-          <input type="text" className="authentication-item" id="password" placeholder="Password" required/>
-          <p className='forgot'>forgot Password</p>
-          <div className='button-container'>
-            <button type="submit" className="signin-button">Submit</button>
+          <input
+            type="text"
+            className="authentication-item"
+            id="username"
+            placeholder="Username"
+            required
+          />
+          <p className="forgot">forgot Username</p>
+          <input
+            type="text"
+            className="authentication-item"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <p className="forgot">forgot Password</p>
+          <div className="button-container">
+            <button type="submit" className="signin-button">
+              Submit
+            </button>
             {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-            <button type="button" className="signin-button" onClick={hideSignInForm}>Cancel</button>
-            <button type="button" className="signin-button" onClick={showNewUserForm}>New User</button>
+            <button
+              type="button"
+              className="signin-button"
+              onClick={hideSignInForm}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="signin-button"
+              onClick={showNewUserForm}
+            >
+              New User
+            </button>
           </div>
         </div>
       </form>
 
       {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
       <form className="new-user-form" onSubmit={submitNewUserForm}>
-        <div className='flex-signin-form'>
+        <div className="flex-signin-form">
           <h3>Register as a New User</h3>
 
-          <input type="text" className="authentication-item" id="new-username" placeholder="Username" required/>
-          <input type="text" className="authentication-item" id="new-password" placeholder="Password" required/>
-          <div className='button-container'>
-            <button type="submit" className="signin-button">Submit</button>
+          <input
+            type="text"
+            className="authentication-item"
+            id="new-username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="text"
+            className="authentication-item"
+            id="new-password"
+            placeholder="Password"
+            required
+          />
+          <div className="button-container">
+            <button type="submit" className="signin-button">
+              Submit
+            </button>
             {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-            <button type="button" className="signin-button" onClick={hideNewUserForm}>Cancel</button>
-            <button type="button" className="signin-button" onClick={showSignInForm}>Existing User</button>
+            <button
+              type="button"
+              className="signin-button"
+              onClick={hideNewUserForm}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="signin-button"
+              onClick={showSignInForm}
+            >
+              Existing User
+            </button>
           </div>
         </div>
       </form>
@@ -420,12 +540,24 @@ function App() {
         <div className={`left-sidebar ${isLeftSidebarOpen ? "" : "collapsed"}`}>
           <h3>Check Lists</h3>
           <div className="list-container">
-        {checkList.map((item, index) => (
-          <div className='list-buttons' key={index}>
-            <button onClick={changeList} className="list-button">{item}</button>
-            <button onClick={(event) => editList(event, "edit", index)} className="edit-button"><FaEdit /></button>
-            <button onClick={(event) => comfirmDeleteList(event, index)} className="delete-button"><FaTrash /></button>
-          </div>
+            {checkList.map((item, index) => (
+              <div className="list-buttons" key={index}>
+                <button onClick={changeList} className="list-button">
+                  {item.list_title}
+                </button>
+                <button
+                  onClick={(event) => editList(event, "edit", index)}
+                  className="edit-button"
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  onClick={(event) => comfirmDeleteList(event, index)}
+                  className="delete-button"
+                >
+                  <FaTrash />
+                </button>
+              </div>
             ))}
           </div>
 

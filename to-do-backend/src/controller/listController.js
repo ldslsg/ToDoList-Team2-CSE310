@@ -36,17 +36,20 @@ async function getAllLists(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 async function createList(req, res) {
   try {
     const { listName, userID } = req.body;
-    await newList(listName, userID);
-    res.status(201).json({ message: 'List created' });
-    console.log('List created');
+    const result = await newList(listName, userID);
+    const listID = result.lastID; 
+    res.status(201).json({ message: 'List created', listID: listID });
+    console.log('List created with ID:', listID);
   } catch (error) {
     console.error('Error creating new list:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 module.exports = {
     createList,
     editListName,

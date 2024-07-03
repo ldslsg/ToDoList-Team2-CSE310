@@ -37,7 +37,7 @@ async function newList(listName, userID) {
         'INSERT INTO list (list_title, user_id) VALUES (?, ?)',
         [listName, userID]
     );
-    return result;
+    return {lastID: result.lastID };
 }
 module.exports = {
     newList,
