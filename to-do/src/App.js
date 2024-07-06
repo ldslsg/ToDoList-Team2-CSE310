@@ -159,27 +159,82 @@ const [ListItems, setListItems] = useState([["item 1", "description 1", "due dat
 
 const [ListItem, setListItem] = useState({name:'', description:'', due_date:''});
 
+const [isEditing, setIsEditing] = useState(false);
+const [currentIndex, setCurrentIndex] = useState(null);
+const [showAddForm, setShowAddForm] = useState(false);
+const [showDeleteForm, setShowDeleteForm] = useState(false);
+const [itemToDelete, setItemToDelete] = useState(null);
+
 const saveItemInfo = (e) => {
   const {name , value} = e.target;
   setListItem({...ListItem, [name]: value})
 }
 
 const AddListItem = async (e) => {
-  const NewItem = [ListItem.name, ListItem.description, ListItem.due_date]
-  setListItems((prevListItems) => [
-    ...prevListItems,
-    NewItem
-  ]);
-  console.log (NewItem)
-  // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
+  if (isEditing) {
+    const updatedItems = [...ListItems];
+    updatedItems[currentIndex] = [ListItem.name, ListItem.description, ListItem.due_date];
+    setListItems(updatedItems);
+    setIsEditing(false);
+    setCurrentIndex(null);
+  } else {
+    const NewItem = [ListItem.name, ListItem.description, ListItem.due_date];
+    setListItems((prevListItems) => [
+      ...prevListItems,
+      NewItem
+    ]);
+  }
+  setListItem({ name: '', description: '', due_date: '' });
+  hideAddItemForm();
 }
+
+  const EditListItem = (index) => {
+    const item = ListItems[index];
+    setListItem({ name: item[0], description: item[1], due_date: item[2] });
+    setIsEditing(true);
+    setCurrentIndex(index);
+    showAddItemForm();
+  }
+
+  const DeleteListItem = (index) => {
+    setShowDeleteForm(true);
+    setItemToDelete(index);
+  }
+
+  // const yesDeleteList = () => {
+  //   setListItems((prevListItems) => {
+  //     if (Array.isArray(prevListItems)) {
+  //       return prevListItems.filter((_, i) => i !== itemToDelete);
+  //     }
+  //     return prevListItems;
+  //   });
+    // const noDeleteList = () => {
+    //   setShowDeleteForm(false);
+    //   setItemToDelete(null);
+    // }
+  // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
+
 
 
 
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
   return (
     <div className="App">
-
+       <div className={`content ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
+        <h3 className="list-title">Today's Tasks</h3>
+        <button onClick={showAddItemForm}> <FaPlusSquare /> </button>
+        <ol className="currect-list" id='currectList'>
+          {ListItems.map((item, index) => (
+            <div key={index}>
+              <li>{item[0]}</li>
+              <p>{item[1]}</p>
+              <p>{item[2]}</p>
+              <button onClick={() => EditListItem(index)} className="edit-button"><FaEdit /></button>
+              <button onClick={() => DeleteListItem(index)} className="delete-button"><FaTrash /></button>
+            </div>
+          ))}
+        </ol>
+      </div>
       {/* --------------------------------------------THE DELETE FORM------------------------------------------------- */}
       <div className='delete-form'>
         <p>Are you sure you want to <strong>delete</strong> this list?</p>
@@ -190,16 +245,16 @@ const AddListItem = async (e) => {
 
       {/* --------------------------------------------Add Item Form------------------------------------------------- */}
 
-      <form className="add-form">
+      <div className="add-form">
         <h3>Add new list item</h3>
 
         <input name = "name" type="text" className="list-item" value={ListItem.name} id="list-name" placeholder="Name..." onChange={saveItemInfo} required/>
         <input name = 'description' type="text" className="list-item" value={ListItem.description} id="list-description" placeholder="Description..." onChange={saveItemInfo} required/>
         <input name = "due_date" type="text" className="list-item" value={ListItem.due_date} id="Do-Date" placeholder="Due Date..." onChange={saveItemInfo} required/>
 
-        <button className="add-button" onClick = {AddListItem} >Add</button> 
+        <button className="add-button" onClick = {AddListItem}>{isEditing ? 'Save': 'Add'}</button> 
         <button className="cancel-button" onClick={hideAddItemForm}>Cancel</button>
-      </form>
+      </div>
 
 
 
@@ -307,10 +362,12 @@ const AddListItem = async (e) => {
           <button onClick={showAddItemForm}> {<FaPlusSquare />} </button>
           <ol className="currect-list" id='currectList'>
             {ListItems.map((item, index)=>(
-              <div key={index}>
+              <div>
                 <li key={["name", index]}>{ListItems[index][0]}</li>,
                 <p key={["description", index]}>{ListItems[index][1]}</p>,
                 <p key={["due_date", index]}>{ListItems[index][2]}</p> 
+                <button onClick={EditListItem} key={["edit", index]} className="edit-button"><FaEdit /></button>
+                <button onClick={DeleteListItem} key={["delete", index]} className="delete-button"><FaTrash /></button>
               </div>
             ))}
 
