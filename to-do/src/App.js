@@ -165,6 +165,14 @@ const [showAddForm, setShowAddForm] = useState(false);
 const [showDeleteForm, setShowDeleteForm] = useState(false);
 const [itemToDelete, setItemToDelete] = useState(null);
 const [itemIndex, setItemIndex] = useState(null);
+//editing values
+const [editName, setEditName] = useState('');
+const [editDescription, setEditDescription] = useState('');
+const [editDueDate, setEditDueDate] = useState('');
+const handleNameChange = (e) => setEditName(e.target.value);
+const handleDescriptionChange = (e) => setEditDescription(e.target.value);
+const handleDueDateChange = (e) => setEditDueDate(e.target.value);
+
 
 const saveItemInfo = (e) => {
   const {name , value} = e.target;
@@ -198,12 +206,31 @@ const AddListItem = async (e) => {
   }
 
   const ShowEditForm = (index) => {
-    document.querySelector(".edit-form").style.display = "block";
     setItemIndex(index);
+    setEditName(ListItems[index][0]);
+    setEditDescription(ListItems[index][1]);
+    setEditDueDate(ListItems[index][2]);
+    setIsEditing(true);
+    // document.querySelector(".edit-form").style.display = "block";
   }
 
-  const HideEditForm = (index) => {
-    document.querySelector(".edit-form").style.display = "none";
+  const HideEditForm = () => {
+    setItemIndex(null);
+    setEditName('');
+    setEditDescription('');
+    setEditDueDate('');
+    setIsEditing(false);
+    // document.querySelector(".edit-form").style.display = "none";
+  }
+
+
+  const handleSave = () => {
+    setListItems(prevItems => {
+      const updatedItems = [...prevItems];
+      updatedItems[itemIndex] = [editName, editDescription, editDueDate];
+      return updatedItems;
+    });
+    HideEditForm();
   }
 
   const DeleteListItem = (index) => {
@@ -374,10 +401,10 @@ const AddListItem = async (e) => {
           <ol className="currect-list" id='currectList'>
             {ListItems.map((item, index)=>(
               <div>
-                <li key={["name", index]}>{ListItems[index][0]}</li>,
-                <p key={["description", index]}>{ListItems[index][1]}</p>,
-                <p key={["due_date", index]}>{ListItems[index][2]}</p> 
-                <button onClick={ShowEditForm} key={["edit", index]} className="edit-button"><FaEdit /></button>
+                <li key={`name-${index}`}>{ListItems[index][0]}</li>,
+                <p key={`description-${index}`}>{ListItems[index][1]}</p>,
+                <p key={`due_date-${index}`}>{ListItems[index][2]}</p> 
+                <button onClick={() => ShowEditForm(index)} key={`edit-${index}`} className="edit-button"><FaEdit /></button>
                 <button onClick={() => DeleteListItem(index)} key={`delete-${index}`} className="delete-button"><FaTrash /></button>
               </div>
             ))}
@@ -392,6 +419,26 @@ const AddListItem = async (e) => {
             </div>
           )}
 
+
+          {isEditing && (
+          <div className="edit-form">
+              <h3>Edit Task</h3>
+              <label>
+                Name:
+                <input type="text" value={editName} onChange={handleNameChange} />
+              </label>
+              <label>
+                Description:
+                <input type="text" value={editDescription} onChange={handleDescriptionChange} />
+              </label>
+              <label>
+                Due Date:
+                <input type="text" value={editDueDate} onChange={handleDueDateChange} />
+              </label>
+              <button onClick={handleSave}>Save</button>
+              <button onClick={HideEditForm}>Cancel</button>
+            </div>
+          )}
           {/* main content footer */}
           <footer className={`main-footer ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
             <p>&copy; 2023 Check Mate. All rights reserved.</p>
