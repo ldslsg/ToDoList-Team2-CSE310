@@ -164,6 +164,7 @@ const [currentIndex, setCurrentIndex] = useState(null);
 const [showAddForm, setShowAddForm] = useState(false);
 const [showDeleteForm, setShowDeleteForm] = useState(false);
 const [itemToDelete, setItemToDelete] = useState(null);
+const [itemIndex, setItemIndex] = useState(null);
 
 const saveItemInfo = (e) => {
   const {name , value} = e.target;
@@ -188,12 +189,21 @@ const AddListItem = async (e) => {
   hideAddItemForm();
 }
 
-  const EditListItem = (index) => {
-    const item = ListItems[index];
+  const EditListItem = () => {
+    const item = ListItems[itemIndex];
     setListItem({ name: item[0], description: item[1], due_date: item[2] });
     setIsEditing(true);
-    setCurrentIndex(index);
+    setCurrentIndex(itemIndex);
     showAddItemForm();
+  }
+
+  const ShowEditForm = (index) => {
+    document.querySelector(".edit-form").style.display = "block";
+    setItemIndex(index);
+  }
+
+  const HideEditForm = (index) => {
+    document.querySelector(".edit-form").style.display = "none";
   }
 
   const DeleteListItem = (index) => {
@@ -220,21 +230,6 @@ const AddListItem = async (e) => {
   {/* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */}
   return (
     <div className="App">
-       <div className={`content ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
-        <h3 className="list-title">Today's Tasks</h3>
-        <button onClick={showAddItemForm}> <FaPlusSquare /> </button>
-        <ol className="currect-list" id='currectList'>
-          {ListItems.map((item, index) => (
-            <div key={index}>
-              <li>{item[0]}</li>
-              <p>{item[1]}</p>
-              <p>{item[2]}</p>
-              <button onClick={() => EditListItem(index)} className="edit-button"><FaEdit /></button>
-              <button onClick={() => DeleteListItem(index)} className="delete-button"><FaTrash /></button>
-            </div>
-          ))}
-        </ol>
-      </div>
       {/* --------------------------------------------THE DELETE FORM------------------------------------------------- */}
       <div className='delete-form'>
         <p>Are you sure you want to <strong>delete</strong> this list?</p>
@@ -242,6 +237,18 @@ const AddListItem = async (e) => {
         <button onClick={noDeleteList} id='delete-no' className='form-button'>No</button>
       </div>
 
+      {/* --------------------------------------------Edit Item Form------------------------------------------------- */}
+
+      <div className="edit-form">
+        <h3>Edit item</h3>
+
+        <input name = "name" type="text" className="list-item" value={ListItem.name} id="edit-list-name" placeholder="Name..." onChange={saveItemInfo} required/>
+        <input name = 'description' type="text" className="list-item" value={ListItem.description} id="edit-list-description" placeholder="Description..." onChange={saveItemInfo} required/>
+        <input name = "due_date" type="text" className="list-item" value={ListItem.due_date} id="edit-Do-Date" placeholder="Due Date..." onChange={saveItemInfo} required/>
+
+        <button className="edit-button" onClick = {EditListItem}>{isEditing ? 'Save': 'Add'}</button> 
+        <button className="cancel-button" onClick={HideEditForm}>Cancel</button>
+      </div>
 
       {/* --------------------------------------------Add Item Form------------------------------------------------- */}
 
@@ -366,7 +373,7 @@ const AddListItem = async (e) => {
                 <li key={["name", index]}>{ListItems[index][0]}</li>,
                 <p key={["description", index]}>{ListItems[index][1]}</p>,
                 <p key={["due_date", index]}>{ListItems[index][2]}</p> 
-                <button onClick={EditListItem} key={["edit", index]} className="edit-button"><FaEdit /></button>
+                <button onClick={ShowEditForm} key={["edit", index]} className="edit-button"><FaEdit /></button>
                 <button onClick={DeleteListItem} key={["delete", index]} className="delete-button"><FaTrash /></button>
               </div>
             ))}

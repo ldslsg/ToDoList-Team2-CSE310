@@ -428,3 +428,23 @@ p{
   line-height: 1.7em;
   display: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+.edit-form{
+  display: none;
+  position: fixed;
+  top: 50%;
+  bottom: 50%;
+  transform: translate(-50%, -50%);
+  height: 200px;
+  width: 200px;
+}
