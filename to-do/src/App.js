@@ -210,7 +210,11 @@ const AddListItem = async (e) => {
     setShowDeleteForm(true);
     setItemToDelete(index);
   }
-
+  const handleDelete = () => {
+    setListItems(prevItems => prevItems.filter((item, index) => index !== itemToDelete));
+    setShowDeleteForm(false);
+    setItemToDelete(null);
+  }
   // const yesDeleteList = () => {
   //   setListItems((prevListItems) => {
   //     if (Array.isArray(prevListItems)) {
@@ -374,11 +378,19 @@ const AddListItem = async (e) => {
                 <p key={["description", index]}>{ListItems[index][1]}</p>,
                 <p key={["due_date", index]}>{ListItems[index][2]}</p> 
                 <button onClick={ShowEditForm} key={["edit", index]} className="edit-button"><FaEdit /></button>
-                <button onClick={DeleteListItem} key={["delete", index]} className="delete-button"><FaTrash /></button>
+                <button onClick={() => DeleteListItem(index)} key={`delete-${index}`} className="delete-button"><FaTrash /></button>
               </div>
             ))}
 
           </ol>
+            
+          {showDeleteForm && (
+            <div className="delete-confirmation">
+              <p>Are you sure you want to delete this item?</p>
+              <button onClick={handleDelete}>Yes, delete</button>
+              <button onClick={() => setShowDeleteForm(false)}>Cancel</button>
+            </div>
+          )}
 
           {/* main content footer */}
           <footer className={`main-footer ${isRightSidebarOpen ? '' : 'right'} ${isLeftSidebarOpen ? '' : 'left'}`}>
