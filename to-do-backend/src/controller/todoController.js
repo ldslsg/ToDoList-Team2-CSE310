@@ -3,8 +3,8 @@ const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPrior
 // create new item (to-do)
 async function createNewTodo(req, res) {
   try {
-    const {nameTodo, description, priority, date, list_id} = req.body;
-    await createTodo(nameTodo, description,  priority, date , list_id);
+    const {nameTodo, description, date, list_id} = req.body;
+    await createTodo(nameTodo, description,  date , list_id);
     res.status(201).json({ message: 'Item created' });
     console.log('Item created');
   } catch (error) {
@@ -68,11 +68,11 @@ async function getAllTodosByPriority(req, res) {
   }
 }
 
-// edit item (to-do) can be name, description, priority, date or a combination
+// edit item (to-do) can be name, description, date or a combination
 async function editTodo(req, res) {
   try {
-    const { todoID, nameTodo, description, priority, date } = req.body;
-    await editToDos(todoID, nameTodo, description, priority, date);
+    const { todoID, nameTodo, description, date } = req.body;
+    await editToDos(todoID, nameTodo, description, date);
     res.status(201).json({ message: 'Item edited' });
     console.log('Item edited');
   } catch (error) {

@@ -1,11 +1,11 @@
 const { openDb } = require('../db'); 
 
 // create new item (to-do)
-async function createTodo(nameTodo, description, priority, date, list_id) {
+async function createTodo(nameTodo, description, date, list_id) {
   const db = await openDb();
   const result = await db.run(
-      'INSERT INTO to_dos (name, description, deadline_date, status, priority, list_id) VALUES (?, ?, ?, "Not Completed", ?, ?)',
-      [nameTodo, description,date, priority, list_id]
+      'INSERT INTO to_dos (name, description, deadline_date, status, priority, list_id) VALUES (?, ?, ?, "Not Completed", "True", ?)',
+      [nameTodo, description,date, list_id]
   );
   return result;
 }
@@ -50,12 +50,12 @@ async function allTodosByPriority(UsesrID) {
   return result;
 }
 
-// edit item (to-do) can be name, description, priority, date or a combination
-async function editToDos(todoID, nameTodo, description, priority, date,) {
+// edit item (to-do) can be name, description, date or a combination
+async function editToDos(todoID, nameTodo, description , date,) {
   const db = await openDb();
   const result = await db.run(
-    'UPDATE to_dos SET name = ?, description = ?, deadline_date = ?, priority = ? where to_dos_id = ?',
-    [nameTodo, description, date, priority, todoID]
+    'UPDATE to_dos SET name = ?, description = ?, deadline_date = ? WHERE to_dos_id = ?',
+    [nameTodo, description, date, todoID]
   );
   return result;
 }
