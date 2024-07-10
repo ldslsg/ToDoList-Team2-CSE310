@@ -1,7 +1,8 @@
 const {changeEmail, newUser, changePassword, findUserByEmail} = require('../model/userModels');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt'); 
-  
+
+// change email for a user
 async function changeEmailUser(req, res) {
   try {
     const {  newEmail, password } = req.body;
@@ -14,6 +15,7 @@ async function changeEmailUser(req, res) {
   }
 }
 
+// change password for a user
 async function changePasswordUser(req, res) {
   try {
     const { email, newPassword } = req.body;
@@ -26,6 +28,7 @@ async function changePasswordUser(req, res) {
   }
 }
 
+// create new user
 async function createNewUser(req, res) {
   try {
     const { email, password } = req.body;

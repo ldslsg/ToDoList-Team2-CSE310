@@ -1,6 +1,7 @@
 const { openDb } = require('../db');
 const bcrypt = require('bcrypt');
 
+// change email for a user
 async function changeEmail(newEmail, password) {
   const db = await openDb();
   const result = await db.run(
@@ -9,6 +10,8 @@ async function changeEmail(newEmail, password) {
   );
   return result;
 }
+
+// change password for a user
 async function changePassword(email, newPassword) {
     const db = await openDb();
     const result = await db.run(
@@ -18,6 +21,7 @@ async function changePassword(email, newPassword) {
     return result;
   }
 
+// create new user
 async function newUser(email, password) {
     const db = await openDb();
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -28,6 +32,7 @@ async function newUser(email, password) {
     return result;
 }
 
+// find user by email
 async function findUserByEmail(email) {
   const db = await openDb();
   const user = await db.get(

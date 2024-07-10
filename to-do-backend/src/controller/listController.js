@@ -1,5 +1,6 @@
 const {deleteList, allLists, newList, editList} = require('../model/listModels');
   
+// delete a list and items in the list
 async function deleteListItems(req, res) {
   try {
     const { listID } = req.body;
@@ -10,7 +11,9 @@ async function deleteListItems(req, res) {
     console.error('Error deleting list:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-  }
+}
+
+// edit a list name
 async function editListName(req, res) {
   try {
     const { listID, newName } = req.body;
@@ -21,7 +24,9 @@ async function editListName(req, res) {
     console.error('Error updating list:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-  }
+}
+
+// get all lists for a user
 async function getAllLists(req, res) {
   try {
     const { userID } = req.query;
@@ -37,6 +42,7 @@ async function getAllLists(req, res) {
   }
 }
 
+// create a new list
 async function createList(req, res) {
   try {
     const { listName, userID } = req.body;

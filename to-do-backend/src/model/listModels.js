@@ -1,5 +1,6 @@
 const { openDb } = require('../db');
 
+// delete a list and items in the list
 async function deleteList(listID) {
   const db = await openDb();
   const result1 = await db.run(
@@ -12,15 +13,18 @@ async function deleteList(listID) {
   );
   return result1,result;
 }
+
+// edit a list name
 async function editList(listID, newName) {
-    const db = await openDb();
-    const result = await db.run(
-      'UPDATE list SET list_title = ? where list_id = ?',
-      [newName, listID]
-    );
-    return result;
-  }
-  
+  const db = await openDb();
+  const result = await db.run(
+    'UPDATE list SET list_title = ? where list_id = ?',
+    [newName, listID]
+  );
+  return result;
+}
+ 
+// get all lists for a user
 async function allLists(userID) {
   const db = await openDb();
   const result = await db.all(
@@ -31,6 +35,7 @@ async function allLists(userID) {
   return result;
 }
 
+// create a new list for a user
 async function newList(listName, userID) {
     const db = await openDb();
     const result = await db.run(
@@ -39,6 +44,7 @@ async function newList(listName, userID) {
     );
     return {lastID: result.lastID };
 }
+
 module.exports = {
     newList,
     editList,
