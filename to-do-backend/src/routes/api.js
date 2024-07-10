@@ -15,6 +15,7 @@ router.put('/updateStatus', todoController.updateStatusComplete);
 
 // routes that effect users
 router.post('/newUser', userController.createNewUser);
+router.post('/login', userController.loginUser);
 router.put('/changeEmail', userController.changeEmailUser);
 router.put('/changePassword', userController.changePasswordUser);
 
