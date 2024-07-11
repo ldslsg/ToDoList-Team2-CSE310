@@ -247,19 +247,121 @@ function App() {
     setCheckList(updatedCheckList);
   };
 
-  {
-    /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE ADD ITEM FORM----------------------------------------------- */
+
+{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE ADD ITEM FORM----------------------------------------------- */}
+
+// Makes the add item form visible. 
+const showAddItemForm = () => {
+  document.querySelector(".add-form").style.display = "block";
+}
+
+// Hides the add item form.
+const hideAddItemForm = () => {
+  document.querySelector(".add-form").style.display = "none";
+}
+
+const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
+
+const [ListItem, setListItem] = useState({name:'', description:'', due_date:''});
+
+const [isEditing, setIsEditing] = useState(false);
+const [currentIndex, setCurrentIndex] = useState(null);
+const [showAddForm, setShowAddForm] = useState(false);
+const [showDeleteForm, setShowDeleteForm] = useState(false);
+const [itemToDelete, setItemToDelete] = useState(null);
+const [itemIndex, setItemIndex] = useState(null);
+//editing values
+const [editName, setEditName] = useState('');
+const [editDescription, setEditDescription] = useState('');
+const [editDueDate, setEditDueDate] = useState('');
+const handleNameChange = (e) => setEditName(e.target.value);
+const handleDescriptionChange = (e) => setEditDescription(e.target.value);
+const handleDueDateChange = (e) => setEditDueDate(e.target.value);
+
+
+const saveItemInfo = (e) => {
+  const {name , value} = e.target;
+  setListItem({...ListItem, [name]: value})
+}
+
+const AddListItem = async (e) => {
+  if (isEditing) {
+    const updatedItems = [...ListItems];
+    updatedItems[currentIndex] = [ListItem.name, ListItem.description, ListItem.due_date];
+    setListItems(updatedItems);
+    setIsEditing(false);
+    setCurrentIndex(null);
+  } else {
+    const NewItem = [ListItem.name, ListItem.description, ListItem.due_date];
+    setListItems((prevListItems) => [
+      ...prevListItems,
+      NewItem
+    ]);
+  }
+  setListItem({ name: '', description: '', due_date: '' });
+  hideAddItemForm();
+}
+
+  const EditListItem = () => {
+    const item = ListItems[itemIndex];
+    setListItem({ name: item[0], description: item[1], due_date: item[2] });
+    setIsEditing(true);
+    setCurrentIndex(itemIndex);
+    showAddItemForm();
   }
 
-  // Makes the add item form visible.
-  const showAddItemForm = () => {
-    document.querySelector(".add-form").style.display = "block";
-  };
+  const ShowEditForm = (index) => {
+    setItemIndex(index);
+    setEditName(ListItems[index][0]);
+    setEditDescription(ListItems[index][1]);
+    setEditDueDate(ListItems[index][2]);
+    setIsEditing(true);
+    // document.querySelector(".edit-form").style.display = "block";
+  }
 
-  // Hides the add item form.
-  const hideAddItemForm = () => {
-    document.querySelector(".add-form").style.display = "none";
-  };
+  const HideEditForm = () => {
+    setItemIndex(null);
+    setEditName('');
+    setEditDescription('');
+    setEditDueDate('');
+    setIsEditing(false);
+    // document.querySelector(".edit-form").style.display = "none";
+  }
+
+
+  const handleSave = () => {
+    setListItems(prevItems => {
+      const updatedItems = [...prevItems];
+      updatedItems[itemIndex] = [editName, editDescription, editDueDate];
+      return updatedItems;
+    });
+    HideEditForm();
+  }
+
+  const DeleteListItem = (index) => {
+    setShowDeleteForm(true);
+    setItemToDelete(index);
+  }
+  const handleDelete = () => {
+    setListItems(prevItems => prevItems.filter((item, index) => index !== itemToDelete));
+    setShowDeleteForm(false);
+    setItemToDelete(null);
+  }
+  // const yesDeleteList = () => {
+  //   setListItems((prevListItems) => {
+  //     if (Array.isArray(prevListItems)) {
+  //       return prevListItems.filter((_, i) => i !== itemToDelete);
+  //     }
+  //     return prevListItems;
+  //   });
+    // const noDeleteList = () => {
+    //   setShowDeleteForm(false);
+    //   setItemToDelete(null);
+    // }
+  // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
+
+
+
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE SIGN IN FORM----------------------------------------------- */
@@ -405,7 +507,7 @@ function App() {
         >
           Cancel
         </button>
-      </form>
+      </div>
 
       {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
       <form className="signin-form" onSubmit={submitSignInForm}>
@@ -449,7 +551,7 @@ function App() {
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
       {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
       <form className="new-user-form" onSubmit={submitNewUserForm}>
