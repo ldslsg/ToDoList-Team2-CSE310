@@ -206,12 +206,16 @@ const AddListItem = async (e) => {
   }
 
   const ShowEditForm = (index) => {
+    console.log('Editing item:', index);
     setItemIndex(index);
     setEditName(ListItems[index][0]);
     setEditDescription(ListItems[index][1]);
     setEditDueDate(ListItems[index][2]);
     setIsEditing(true);
-    // document.querySelector(".edit-form").style.display = "block";
+    console.log('Edit Name:', ListItems[index][0]);
+    console.log('Edit Description:', ListItems[index][1]);
+    console.log('Edit Due Date:', ListItems[index][2]);
+    console.log('Is Editing:', true);
   }
 
   const HideEditForm = () => {
@@ -270,7 +274,7 @@ const AddListItem = async (e) => {
 
       {/* --------------------------------------------Edit Item Form------------------------------------------------- */}
 
-      <div className="edit-form">
+      <div className="edit-form1">
         <h3>Edit item</h3>
 
         <input name = "name" type="text" className="list-item" value={ListItem.name} id="edit-list-name" placeholder="Name..." onChange={saveItemInfo} required/>
@@ -421,7 +425,7 @@ const AddListItem = async (e) => {
 
 
           {isEditing && (
-          <div className="edit-form">
+          <div className="edit-form2" style={{ border: '1px solid red', padding: '10px', background: '#f0f0f0' }}>
               <h3>Edit Task</h3>
               <label>
                 Name:

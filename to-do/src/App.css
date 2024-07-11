@@ -439,12 +439,11 @@ p{
 
 
 
-.edit-form{
-  display: none;
+.edit-form1{
   position: fixed;
-  top: 50%;
-  bottom: 50%;
-  transform: translate(-50%, -50%);
+  display: none;
+  left: 100px;
   height: 200px;
   width: 200px;
+  z-index: 1;
 }
