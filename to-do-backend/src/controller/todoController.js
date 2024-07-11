@@ -29,7 +29,7 @@ async function deleteTodos(req, res) {
 // get all items in a list (to-do)
 async function getAllTodosByListID(req, res) {
   try {
-    const { listID } = req.body;
+    const { listID } = req.query;
     const lists = await allTodosByListID(listID);
     res.status(201).json({ message: 'Todos Returned', lists });
     console.log('Todos returned');

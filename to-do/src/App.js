@@ -24,7 +24,9 @@ function App() {
   {
     /* USER IMG AND INFO*/
   }
-  const [userImage, setUserImage] = useState("https://avatar.iran.liara.run/public"); // got random avatars from https://avatar-placeholder.iran.liara.run/#document
+  const [userImage, setUserImage] = useState(
+    "https://avatar.iran.liara.run/public"
+  ); // got random avatars from https://avatar-placeholder.iran.liara.run/#document
   const [username, setUsername] = useState("username");
 
   {
@@ -93,7 +95,7 @@ function App() {
           userID: user.userId,
         })
         .then((response) => {
-          const newListID = response.data.listID; 
+          const newListID = response.data.listID;
           // updating state on the frontend with the new list object created
           setCheckList((prevCheckList) => [
             ...prevCheckList,
@@ -136,15 +138,12 @@ function App() {
   // Changes the title of the list on display to the name of the list that was clicked.
   // This should eventually change all the items to be the items in the list.
   // It will need to read from a database, and have a way of using the list name as a key to find the items.
-  function changeList(event) {
-    var listName = event.target.textContent;
-    var currentTitle = document.querySelector(".list-title");
-    if (listName == currentTitle.textContent) {
-      currentTitle.textContent = "Today's Tasks";
-    } else {
-      document.querySelector(".list-title").textContent = listName;
-    }
-  }
+  //set the selected list ID, title, and fetch its to-do items form db
+  const changeList = (event, listId, listTitle) => {
+    setSelectedListId(listId);
+    setSelectedListTitle(listTitle);
+    fetchTodosForList(listId);
+  };
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO EDIT A LIST----------------------------------------------- */
@@ -247,106 +246,195 @@ function App() {
     setCheckList(updatedCheckList);
   };
 
-
-{/* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE ADD ITEM FORM----------------------------------------------- */}
-
-// Makes the add item form visible. 
-const showAddItemForm = () => {
-  document.querySelector(".add-form").style.display = "block";
-}
-
-// Hides the add item form.
-const hideAddItemForm = () => {
-  document.querySelector(".add-form").style.display = "none";
-}
-
-const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
-
-const [ListItem, setListItem] = useState({name:'', description:'', due_date:''});
-
-const [isEditing, setIsEditing] = useState(false);
-const [currentIndex, setCurrentIndex] = useState(null);
-const [showAddForm, setShowAddForm] = useState(false);
-const [showDeleteForm, setShowDeleteForm] = useState(false);
-const [itemToDelete, setItemToDelete] = useState(null);
-const [itemIndex, setItemIndex] = useState(null);
-//editing values
-const [editName, setEditName] = useState('');
-const [editDescription, setEditDescription] = useState('');
-const [editDueDate, setEditDueDate] = useState('');
-const handleNameChange = (e) => setEditName(e.target.value);
-const handleDescriptionChange = (e) => setEditDescription(e.target.value);
-const handleDueDateChange = (e) => setEditDueDate(e.target.value);
-
-
-const saveItemInfo = (e) => {
-  const {name , value} = e.target;
-  setListItem({...ListItem, [name]: value})
-}
-
-const AddListItem = async (e) => {
-  if (isEditing) {
-    const updatedItems = [...ListItems];
-    updatedItems[currentIndex] = [ListItem.name, ListItem.description, ListItem.due_date];
-    setListItems(updatedItems);
-    setIsEditing(false);
-    setCurrentIndex(null);
-  } else {
-    const NewItem = [ListItem.name, ListItem.description, ListItem.due_date];
-    setListItems((prevListItems) => [
-      ...prevListItems,
-      NewItem
-    ]);
+  {
+    /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE ADD ITEM FORM----------------------------------------------- */
   }
-  setListItem({ name: '', description: '', due_date: '' });
-  hideAddItemForm();
-}
 
-  const EditListItem = () => {
-    const item = ListItems[itemIndex];
-    setListItem({ name: item[0], description: item[1], due_date: item[2] });
+  const [selectedListId, setSelectedListId] = useState(null);
+  const [selectedListTitle, setSelectedListTitle] = useState("Today's Tasks");
+  const [listItems, setListItems] = useState([]);
+
+  // const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
+
+  const [ListItem, setListItem] = useState({
+    name: "",
+    description: "",
+    due_date: "",
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [itemIndex, setItemIndex] = useState(null);
+  //editing values
+  const [editName, setEditName] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editDueDate, setEditDueDate] = useState("");
+  const handleNameChange = (e) => setEditName(e.target.value);
+  const handleDescriptionChange = (e) => setEditDescription(e.target.value);
+  const handleDueDateChange = (e) => setEditDueDate(e.target.value);
+
+    // Makes the add item form visible.
+  const showAddItemForm = () => {
+      // document.querySelector(".add-form").style.display = "block";
+      setShowAddForm(true); // Use state to control form visibility
+    };
+  
+    // Hides the add item form.
+  const hideAddItemForm = () => {
+      // document.querySelector(".add-form").style.display = "none";
+      setShowAddForm(false); // Use state to control form visibility
+    };
+  
+
+  //get items from db
+  const fetchTodosForList = (listId) => {
+    axios
+      .get("http://localhost:3000/api/getAllTodosByListID", {
+        params: { listID: listId },
+      })
+      .then((response) => {
+        console.log("Fetched todos:", response.data.lists); // Debugging log
+        setListItems(response.data.lists);
+      })
+      .catch((error) => {
+        console.error("Error fetching todos:", error);
+      });
+  };
+
+  const saveItemInfo = (e) => {
+    const { name, value } = e.target;
+    setListItem({ ...ListItem, [name]: value });
+  };
+
+  const addTodoItem = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = jwt.decode(token);
+      axios
+        .post("http://localhost:3000/api/newTodo", {
+          nameTodo: ListItem.name,
+          description: ListItem.description,
+          date: ListItem.due_date,
+          list_id: selectedListId,
+        })
+        .then((response) => {
+          console.log(response.data.message);
+          // Update the state with the new item
+          setListItems([
+            ...listItems,
+            {
+              name: ListItem.name,
+              description: ListItem.description,
+              deadline_date: ListItem.due_date,
+            },
+          ]);
+          setListItem({ name: "", description: "", due_date: "" });
+          hideAddItemForm();
+        })
+        .catch((error) => {
+          console.error("Error creating new todo item:", error);
+        });
+    }
+  };
+
+  // Edit To-do
+
+  const showEditItemForm = (index) => {
+    const item = listItems[index];
+    setListItem({
+      name: item.name,
+      description: item.description,
+      due_date: item.deadline_date,
+    });
     setIsEditing(true);
-    setCurrentIndex(itemIndex);
-    showAddItemForm();
-  }
+    setCurrentIndex(index);
+    setShowAddForm(true); // Reuse the form for editing
+  };
 
-  const ShowEditForm = (index) => {
-    setItemIndex(index);
-    setEditName(ListItems[index][0]);
-    setEditDescription(ListItems[index][1]);
-    setEditDueDate(ListItems[index][2]);
-    setIsEditing(true);
-    // document.querySelector(".edit-form").style.display = "block";
-  }
+  const editTodoItem = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = jwt.decode(token);
+      axios
+        .put("http://localhost:3000/api/editToDos", {
+          todoID: listItems[currentIndex].to_dos_id, // Assuming `to_dos_id` is the identifier for to-do items
+          nameTodo: ListItem.name,
+          description: ListItem.description,
+          date: ListItem.due_date,
+        })
+        .then((response) => {
+          console.log(response.data.message);
+          // Update the state with the edited item
+          const updatedItems = [...listItems];
+          updatedItems[currentIndex] = {
+            ...updatedItems[currentIndex],
+            name: ListItem.name,
+            description: ListItem.description,
+            deadline_date: ListItem.due_date,
+          };
+          setListItems(updatedItems);
+          setListItem({ name: "", description: "", due_date: "" });
+          setIsEditing(false);
+          setCurrentIndex(null);
+          hideAddItemForm();
+        })
+        .catch((error) => {
+          console.error("Error editing todo item:", error);
+        });
+    }
+  };
+
+  // const EditListItem = () => {
+  //   const item = ListItems[itemIndex];
+  //   setListItem({ name: item[0], description: item[1], due_date: item[2] });
+  //   setIsEditing(true);
+  //   setCurrentIndex(itemIndex);
+  //   showAddItemForm();
+  // };
+
+  // const ShowEditForm = (index) => {
+  //   setItemIndex(index);
+  //   setEditName(ListItems[index][0]);
+  //   setEditDescription(ListItems[index][1]);
+  //   setEditDueDate(ListItems[index][2]);
+  //   setIsEditing(true);
+  //   // document.querySelector(".edit-form").style.display = "block";
+  // };
 
   const HideEditForm = () => {
     setItemIndex(null);
-    setEditName('');
-    setEditDescription('');
-    setEditDueDate('');
+    setEditName("");
+    setEditDescription("");
+    setEditDueDate("");
     setIsEditing(false);
     // document.querySelector(".edit-form").style.display = "none";
-  }
-
+  };
 
   const handleSave = () => {
-    setListItems(prevItems => {
+    setListItems((prevItems) => {
       const updatedItems = [...prevItems];
       updatedItems[itemIndex] = [editName, editDescription, editDueDate];
       return updatedItems;
     });
     HideEditForm();
-  }
+  };
 
   const DeleteListItem = (index) => {
     setShowDeleteForm(true);
     setItemToDelete(index);
-  }
+  };
   const handleDelete = () => {
-    setListItems(prevItems => prevItems.filter((item, index) => index !== itemToDelete));
+    setListItems((prevItems) =>
+      prevItems.filter((item, index) => index !== itemToDelete)
+    );
     setShowDeleteForm(false);
     setItemToDelete(null);
-  }
+  };
   // const yesDeleteList = () => {
   //   setListItems((prevListItems) => {
   //     if (Array.isArray(prevListItems)) {
@@ -354,14 +442,11 @@ const AddListItem = async (e) => {
   //     }
   //     return prevListItems;
   //   });
-    // const noDeleteList = () => {
-    //   setShowDeleteForm(false);
-    //   setItemToDelete(null);
-    // }
+  // const noDeleteList = () => {
+  //   setShowDeleteForm(false);
+  //   setItemToDelete(null);
+  // }
   // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
-
-
-
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE SIGN IN FORM----------------------------------------------- */
@@ -372,10 +457,10 @@ const AddListItem = async (e) => {
     if (token) {
       showLogoutForm(); // Show logout confirmation if user is logged in
     } else {
-          // make sure the info from last user is gone
-    document.querySelector("#username").value = '';
-    document.querySelector("#password").value = '';
-    document.querySelector(".signin-form").style.display = "block";
+      // make sure the info from last user is gone
+      document.querySelector("#username").value = "";
+      document.querySelector("#password").value = "";
+      document.querySelector(".signin-form").style.display = "block";
     }
   };
 
@@ -384,7 +469,7 @@ const AddListItem = async (e) => {
   };
 
   const submitSignInForm = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     const formUsername = document.querySelector("#username").value;
     const formPass = document.querySelector("#password").value;
 
@@ -413,11 +498,11 @@ const AddListItem = async (e) => {
   }
 
   const logoutUser = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setUsername("username");
     setUserID(null);
     setCheckList([]);
-    hideLogoutForm(); 
+    hideLogoutForm();
   };
 
   const showLogoutForm = () => {
@@ -464,7 +549,7 @@ const AddListItem = async (e) => {
   }
   return (
     <div className="App">
-      {/* --------------------------------------------THE DELETE FORM------------------------------------------------- */}
+      {/* --------------------------------------------THE DELETE LIST FORM------------------------------------------------- */}
       <div className="delete-form">
         <p>
           Are you sure you want to <strong>delete</strong> this list?
@@ -479,35 +564,91 @@ const AddListItem = async (e) => {
 
       {/* --------------------------------------------Edit Item Form------------------------------------------------- */}
 
-      <div className="edit-form">
+      {/* <div className="edit-form">
         <h3>Edit item</h3>
 
-        <input name = "name" type="text" className="list-item" value={ListItem.name} id="edit-list-name" placeholder="Name..." onChange={saveItemInfo} required/>
-        <input name = 'description' type="text" className="list-item" value={ListItem.description} id="edit-list-description" placeholder="Description..." onChange={saveItemInfo} required/>
-        <input name = "due_date" type="text" className="list-item" value={ListItem.due_date} id="edit-Do-Date" placeholder="Due Date..." onChange={saveItemInfo} required/>
+        <input
+          name="name"
+          type="text"
+          className="list-item"
+          value={ListItem.name}
+          id="edit-list-name"
+          placeholder="Name..."
+          onChange={saveItemInfo}
+          required
+        />
+        <input
+          name="description"
+          type="text"
+          className="list-item"
+          value={ListItem.description}
+          id="edit-list-description"
+          placeholder="Description..."
+          onChange={saveItemInfo}
+          required
+        />
+        <input
+          name="due_date"
+          type="text"
+          className="list-item"
+          value={ListItem.due_date}
+          id="edit-Do-Date"
+          placeholder="Due Date..."
+          onChange={saveItemInfo}
+          required
+        />
 
-        <button className="edit-button" onClick = {EditListItem}>{isEditing ? 'Save': 'Add'}</button> 
-        <button className="cancel-button" onClick={HideEditForm}>Cancel</button>
-      </div>
-
-      {/* --------------------------------------------Add Item Form------------------------------------------------- */}
-
-      <div className="add-form">
-        <h3>Add new list item</h3>
-
-        <input name = "name" type="text" className="list-item" value={ListItem.name} id="list-name" placeholder="Name..." onChange={saveItemInfo} required/>
-        <input name = 'description' type="text" className="list-item" value={ListItem.description} id="list-description" placeholder="Description..." onChange={saveItemInfo} required/>
-        <input name = "due_date" type="text" className="list-item" value={ListItem.due_date} id="Do-Date" placeholder="Due Date..." onChange={saveItemInfo} required/>
-
-        <button className="add-button" onClick = {AddListItem}>{isEditing ? 'Save': 'Add'}</button> 
-        <button
-         
-          className="cancel-button"
-          onClick={hideAddItemForm}
-        >
+        <button className="edit-button" onClick={EditListItem}>
+          {isEditing ? "Save" : "Add"}
+        </button>
+        <button className="cancel-button" onClick={HideEditForm}>
           Cancel
         </button>
-      </div>
+      </div> */}
+
+      {/* --------------------------------------------Add LIST Form------------------------------------------------- */}
+
+      {/* Add Item Form */}
+      {showAddForm && (
+        <form className="add-form" onSubmit={isEditing ? editTodoItem : addTodoItem}>
+          <h3>{isEditing ? "Edit Task" : "Add New To-Do"}</h3>
+            <input
+              type="text"
+              name="name"
+              value={ListItem.name}
+              onChange={saveItemInfo}
+              required
+              placeholder="Name"
+            />
+            <input
+              type="text"
+              name="description"
+              value={ListItem.description}
+              onChange={saveItemInfo}
+              required
+              placeholder="Description"
+            />
+            <input
+              type="date"
+              name="due_date"
+              value={ListItem.due_date}
+              onChange={saveItemInfo}
+              required
+              placeholder="Due Date"
+            />
+
+          <button type="submit" className="add-button">
+            {isEditing ? "Save" : "Add"}
+          </button>
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={hideAddItemForm}
+          >
+            Cancel
+          </button>
+        </form>
+      )}
 
       {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
       <form className="signin-form" onSubmit={submitSignInForm}>
@@ -594,7 +735,7 @@ const AddListItem = async (e) => {
           </div>
         </div>
       </form>
- {/* --------------------------------------------LOGOUT MODAL---------------------------------------------- */}
+      {/* --------------------------------------------LOGOUT MODAL---------------------------------------------- */}
       <div className="logout-form" style={{ display: "none" }}>
         <p>
           Are you sure you want to <strong>logout</strong>?
@@ -690,7 +831,10 @@ const AddListItem = async (e) => {
           <div className="list-container">
             {checkList.map((item, index) => (
               <div className="list-buttons" key={index}>
-                <button onClick={changeList} className="list-button">
+                <button
+                  onClick={(e) => changeList(e, item.list_id, item.list_title)}
+                  className="list-button"
+                >
                   {item.list_title}
                 </button>
                 <button
@@ -700,7 +844,7 @@ const AddListItem = async (e) => {
                   <FaEdit />
                 </button>
                 <button
-                  onClick={(event) => comfirmDeleteList(event, index)}
+                  onClick={(event) => DeleteListItem(index)}
                   className="delete-button"
                 >
                   <FaTrash />
@@ -773,21 +917,28 @@ const AddListItem = async (e) => {
             isLeftSidebarOpen ? "" : "left"
           }`}
         >
-          <h3 className="list-title">Today's Tasks</h3>
-          <button onClick={showAddItemForm}> {<FaPlusSquare />} </button>
-          <ol className="currect-list" id='currectList'>
-            {ListItems.map((item, index)=>(
-              <div>
-                <li key={`name-${index}`}>{ListItems[index][0]}</li>,
-                <p key={`description-${index}`}>{ListItems[index][1]}</p>,
-                <p key={`due_date-${index}`}>{ListItems[index][2]}</p> 
-                <button onClick={() => ShowEditForm(index)} key={`edit-${index}`} className="edit-button"><FaEdit /></button>
-                <button onClick={() => DeleteListItem(index)} key={`delete-${index}`} className="delete-button"><FaTrash /></button>
+          <h3 className="list-title">{selectedListTitle}</h3>
+          <button className="add-new-todo" onClick={showAddItemForm}>
+            {" "}
+            Add New To-do {<FaPlusSquare />}{" "}
+          </button>
+          <ol className="currect-list" id="currectList">
+            {listItems.map((item, index) => (
+              <div key={index}>
+                <li>{item.name}</li>
+                <p>{item.description}</p>
+                <p>{item.deadline_date}</p>
+                <button onClick={() => showEditItemForm(index)} className="edit-button"><FaEdit /></button>
+                <button
+                  onClick={() => DeleteListItem(index)}
+                  className="delete-button"
+                >
+                  <FaTrash />
+                </button>
               </div>
             ))}
-
           </ol>
-            
+
           {showDeleteForm && (
             <div className="delete-confirmation">
               <p>Are you sure you want to delete this item?</p>
@@ -796,26 +947,37 @@ const AddListItem = async (e) => {
             </div>
           )}
 
-
-          {isEditing && (
-          <div className="edit-form">
+          {/* {isEditing && (
+            <div className="edit-form">
               <h3>Edit Task</h3>
               <label>
                 Name:
-                <input type="text" value={editName} onChange={handleNameChange} />
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={handleNameChange}
+                />
               </label>
               <label>
                 Description:
-                <input type="text" value={editDescription} onChange={handleDescriptionChange} />
+                <input
+                  type="text"
+                  value={editDescription}
+                  onChange={handleDescriptionChange}
+                />
               </label>
               <label>
                 Due Date:
-                <input type="text" value={editDueDate} onChange={handleDueDateChange} />
+                <input
+                  type="text"
+                  value={editDueDate}
+                  onChange={handleDueDateChange}
+                />
               </label>
               <button onClick={handleSave}>Save</button>
               <button onClick={HideEditForm}>Cancel</button>
             </div>
-          )}
+          )} */}
           {/* main content footer */}
           <footer
             className={`main-footer ${isRightSidebarOpen ? "" : "right"} ${

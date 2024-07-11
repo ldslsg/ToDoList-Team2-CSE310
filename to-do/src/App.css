@@ -264,6 +264,18 @@
   color: var(--light-gray-2);
   text-align: center;
 }
+
+.add-new-todo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  padding: 5px;
+  cursor: pointer;
+
+}
 .content {
   position: fixed;
   z-index: 0;
@@ -349,15 +361,30 @@
 }
 
 /* The new list button at the bottom of the left footer style*/
-.new-list{
+.new-list, .add-new-todo{
   width: 100%;
   color: var(--accent-color-green);
   background-color: transparent;
   border: none;
 }
-.new-list:hover{
+.new-list:hover, .add-new-todo:hover{
   color: var(--dark-gray-1);
   background-color: var(--accent-color-green);
+}
+
+/* The new To-do button in the main content*/
+.add-new-todo{
+  width: 15%;
+  margin-left: 10px;
+  color: black;
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--accent-color-green);
+}
+.add-new-todo:hover{
+  color: var(--accent-color-green);
+  background-color: rgb(40,44,52);
 }
 
 /* The right part of the footer style*/
@@ -427,7 +454,7 @@ p{
   border-radius: 5px;
   z-index: 5;
   line-height: 1.7em;
-  display: none;
+  /* display: none; */
 }
 
 /* ---------------------------------------------EVERYTHING IN THE NEW USER FORM AND SIGN IN FORM----------------------------------------------------- */

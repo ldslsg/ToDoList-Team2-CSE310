@@ -24,7 +24,8 @@ async function deleteTodo(todoID) {
 async function allTodosByListID(listID) {
   const db = await openDb();
   const result = await db.all(
-    'SELECT * FROM to_dos WHERE list_id = ? and status = "Not Completed"',
+    'SELECT * FROM to_dos WHERE list_id = ?',
+    // status = "Not Completed"
     [listID]
   );
   return result;
