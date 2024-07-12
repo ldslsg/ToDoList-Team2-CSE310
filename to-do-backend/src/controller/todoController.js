@@ -1,4 +1,4 @@
-const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPriority, editToDos, updateStatus} = require('../model/todoModel');
+const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPriority, editToDos, updateStatus, allCompleteTodosByListID} = require('../model/todoModel');
 
 // create new item (to-do)
 async function createNewTodo(req, res) {
@@ -29,7 +29,7 @@ async function deleteTodos(req, res) {
 // get all items in a list (to-do)
 async function getAllTodosByListID(req, res) {
   try {
-    const { listID } = req.body;
+    const { listID } = req.query;
     const lists = await allTodosByListID(listID);
     res.status(201).json({ message: 'Todos Returned', lists });
     console.log('Todos returned');
@@ -40,19 +40,35 @@ async function getAllTodosByListID(req, res) {
   }
 }
 
-// get all items with a deadline of today (to-do)
-async function getAllTodosByDate(req, res) {
+// get all COMPLETED items in a list (to-do)
+async function getAllCompleteTodosByListID(req, res) {
   try {
-    const {UserID } = req.body;
-    const lists = await allTodosByDate(UserID);
+    const { listID } = req.query;
+    const lists = await allCompleteTodosByListID(listID);
     res.status(201).json({ message: 'Todos Returned', lists });
-    console.log('Todos returned');
+    console.log('Completed Todos returned');
     console.log(lists);
   } catch (error) {
     console.error('Error getting Todos:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+
+// get all items with a deadline of today (to-do)
+async function getAllTodosByDate(req, res) {
+  try {
+    const { UserID } = req.query;
+    console.log("Received UserID - by date:", UserID);
+    const lists = await allTodosByDate(UserID);
+    console.log("Todos returned by date:", lists);
+    res.status(201).json({ message: 'Todos Returned', lists });
+  } catch (error) {
+    console.error('Error getting Todos:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
 
 // get all items with a priority of True (to-do)
 async function getAllTodosByPriority(req, res) {
@@ -99,6 +115,7 @@ async function updateStatusComplete(req, res) {
     createNewTodo,
     deleteTodos,
     getAllTodosByListID,
+    getAllCompleteTodosByListID,
     getAllTodosByDate,
     getAllTodosByPriority,
     editTodo,

@@ -25,6 +25,7 @@
   height: 80px;
 }
 
+
 /* The main style for all parts of the header*/
 .app-header {
   position: fixed;
@@ -157,10 +158,17 @@
   display: none;
 }
 
+.username {
+  font-size: 0.7em;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 /* -----------------------------------------------------------EVERYTHING IN THE SIDEBARS----------------------------------------------------------------- */
 /* The styles for both the left and right sidebars*/
 .left-sidebar h3, .right-sidebar h3{
   text-align: center;
+  color: var(--accent-color-green);  
 }
 .left-sidebar, .right-sidebar {
   position: fixed;
@@ -261,8 +269,20 @@
 /* -------------------------------------------------------EVERYTHING IN THE MAIN CONTENT------------------------------------------------------ */
 /* The content style*/
 .content h3 {
-  color: var(--light-gray-2);
+  color: var(--accent-color-green);
   text-align: center;
+}
+
+.add-new-todo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  padding: 5px;
+  cursor: pointer;
+
 }
 .content {
   position: fixed;
@@ -286,6 +306,51 @@
   background-repeat: repeat;
   color: var(--light-gray-2);
 }
+
+.todo-item {
+  border: 1px solid var(--light-gray-2);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.todo-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todo-name {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: var(--accent-color-green);
+}
+
+.todo-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.todo-buttons .edit-button,
+.todo-buttons .delete-button {
+  font-size: 1.5em; 
+  padding: 10px; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.todo-item-body {
+  margin-top: 10px;
+  padding-left: 10px;
+}
+
+.todo-item-body p {
+  color: #6cc466a6;
+}
+
 /*if the left sidebar is closed*/
 .content.left {
   margin-left: 0;
@@ -355,9 +420,41 @@
   background-color: transparent;
   border: none;
 }
-.new-list:hover{
+
+.new-list:hover, .add-new-todo:hover{
   color: var(--dark-gray-1);
   background-color: var(--accent-color-green);
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.add-new-todo{
+  width: 100%;
+  color: var(--accent-color-green);
+  background-color: transparent;
+  border: none;
+  margin-bottom: 20px;
+}
+
+.add-new-todo:hover{
+  color: var(--dark-gray-1);
+  background-color: var(--accent-color-green);
+  margin-bottom: 20px;
+}
+
+/* The new To-do button in the main content*/
+.add-new-todo{
+  width: 15%;
+  margin-left: 10px;
+  color: black;
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--accent-color-green);
+}
+.add-new-todo:hover{
+  color: var(--accent-color-green);
+  background-color: rgb(40,44,52);
 }
 
 /* The right part of the footer style*/
@@ -374,7 +471,7 @@ p{
 
 /*-------------------------------------------------EVERYTHING IN THE DELETE FORM----------------------------------------------------------------*/
 /* The delete form style*/
-.delete-form{
+.delete-form, .delete-todo-form{
   position: fixed;
   width: 200px;
   height: 100px;
@@ -427,7 +524,7 @@ p{
   border-radius: 5px;
   z-index: 5;
   line-height: 1.7em;
-  display: none;
+  /* display: none; */
 }
 
 /* ---------------------------------------------EVERYTHING IN THE NEW USER FORM AND SIGN IN FORM----------------------------------------------------- */
