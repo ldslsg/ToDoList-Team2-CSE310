@@ -401,7 +401,7 @@ p{
 
 /*-------------------------------------------------EVERYTHING IN THE DELETE FORM----------------------------------------------------------------*/
 /* The delete form style*/
-.delete-form{
+.delete-form, .delete-todo-form{
   position: fixed;
   width: 200px;
   height: 100px;
