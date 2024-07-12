@@ -163,8 +163,6 @@ function App() {
   }
 
   // Changes the title of the list on display to the name of the list that was clicked.
-  // This should eventually change all the items to be the items in the list.
-  // It will need to read from a database, and have a way of using the list name as a key to find the items.
   //set the selected list ID, title, and fetch its to-do items form db
   const changeList = (event, listId, listTitle) => {
     setSelectedListId(listId);
@@ -238,13 +236,7 @@ function App() {
     document.querySelector(".delete-form").style.display = "block";
   };
 
-  // Hides the delete form without deleting the list.
-  // const noDeleteList = () => {
-  //   document.querySelector(".delete-form").style.display = "none";
-  // };
-
   // Deletes the list and hides the delete form.
-  // This should eventually delete the list from the database.
   const deleteList = () => {
     // document.querySelector(".delete-form").style.display = "none";
 
@@ -285,8 +277,6 @@ function App() {
   const [listItems, setListItems] = useState([]);
   const [completedTodos, setCompletedTodos] = useState([]);
 
-  // const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
-
   const [ListItem, setListItem] = useState({
     name: "",
     description: "",
@@ -298,25 +288,17 @@ function App() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [itemIndex, setItemIndex] = useState(null);
-  //editing values
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editDueDate, setEditDueDate] = useState("");
-  const handleNameChange = (e) => setEditName(e.target.value);
-  const handleDescriptionChange = (e) => setEditDescription(e.target.value);
-  const handleDueDateChange = (e) => setEditDueDate(e.target.value);
 
   // Makes the add item form visible.
   const showAddItemForm = () => {
     // document.querySelector(".add-form").style.display = "block";
-    setShowAddForm(true); // Use state to control form visibility
+    setShowAddForm(true); 
   };
 
   // Hides the add item form.
   const hideAddItemForm = () => {
     // document.querySelector(".add-form").style.display = "none";
-    setShowAddForm(false); // Use state to control form visibility
+    setShowAddForm(false); 
   };
 
   //get items from db
@@ -326,7 +308,7 @@ function App() {
         params: { listID: listId },
       })
       .then((response) => {
-        console.log("Fetched todos:", response.data.lists); // Debugging log
+        console.log("Fetched todos:", response.data.lists); 
         setListItems(response.data.lists);
       })
       .catch((error) => {
@@ -419,18 +401,6 @@ function App() {
     }
   };
 
-  // const DeleteListItem = (index) => {
-  //   setShowDeleteForm(true);
-  //   setItemToDelete(index);
-  // };
-  // const handleDelete = () => {
-  //   setListItems((prevItems) =>
-  //     prevItems.filter((item, index) => index !== itemToDelete)
-  //   );
-  //   setShowDeleteForm(false);
-  //   setItemToDelete(null);
-  // };
-
   // Delete To-dos
   const confirmDeleteTodo = (index) => {
     setItemToDelete(index);
@@ -485,7 +455,7 @@ function App() {
   const showSignInForm = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      showLogoutForm(); // Show logout confirmation if user is logged in
+      showLogoutForm(); 
     } else {
       // make sure the info from last user is gone
       document.querySelector("#username").value = "";
@@ -513,9 +483,9 @@ function App() {
         console.log(response.data.message);
         localStorage.setItem("token", response.data.token); // saving the token to localStorage
         const user = jwt.decode(response.data.token); // decoding the token to get user info
-        setUsername(user.email); // Update username
-        setUserID(user.userId); // Update userID
-        fetchLists(user.userId); // fetch updated list by userID
+        setUsername(user.email); // update username
+        setUserID(user.userId); // update userID
+        fetchLists(user.userId); // fetch the updated list by userID
         hideSignInForm();
       })
       .catch((error) => {
