@@ -24,20 +24,30 @@ async function deleteTodo(todoID) {
 async function allTodosByListID(listID) {
   const db = await openDb();
   const result = await db.all(
-    'SELECT * FROM to_dos WHERE list_id = ?',
-    // status = "Not Completed"
+    'SELECT * FROM to_dos WHERE list_id = ? AND status = "Not Completed"',
     [listID]
   );
   return result;
 }
 
-// get all items with a deadline of today (to-do)
+// get all COMPLETED items in a list (to-do) 
+async function allCompleteTodosByListID(listID) {
+  const db = await openDb();
+  const result = await db.all(
+    'SELECT * FROM to_dos WHERE list_id = ? AND status = "Completed"',
+    [listID]
+  );
+  return result;
+}
+
+// get all items with by date (to-do)
 async function allTodosByDate(UserID) {
   const db = await openDb();
   const result = await db.all(
-    "SELECT name FROM to_dos INNER JOIN list ON to_dos.list_id = list.list_id WHERE date(deadline_date) = date('now') AND user_id = ? AND status = 'Not Completed'",
+    "SELECT * FROM to_dos INNER JOIN list ON to_dos.list_id = list.list_id WHERE date(deadline_date) = date('now', 'localtime') AND user_id = ? AND status = 'Not Completed'",
     [UserID]
   );
+  console.log("Fetched todos by date from DB:", result);
   return result;
 }
 
@@ -75,6 +85,7 @@ module.exports = {
   createTodo,
   deleteTodo,
   allTodosByListID,
+  allCompleteTodosByListID,
   allTodosByDate,
   allTodosByPriority,
   editToDos,

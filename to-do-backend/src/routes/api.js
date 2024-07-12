@@ -8,6 +8,7 @@ const listController = require('../controller/listController');
 router.post('/newTodo', todoController.createNewTodo);
 router.delete('/deleteTodo', todoController.deleteTodos);
 router.get('/getAllTodosByListID', todoController.getAllTodosByListID);
+router.get('/getAllCompleteTodosByListID', todoController.getAllCompleteTodosByListID);
 router.get('/getAllTodosByDate', todoController.getAllTodosByDate);
 router.get('/getAllTodosByPriority', todoController.getAllTodosByPriority);
 router.put('/editToDos', todoController.editTodo);

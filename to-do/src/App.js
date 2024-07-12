@@ -66,8 +66,35 @@ function App() {
 
     if (userID) {
       fetchLists(userID);
+      fetchTodayTodos(userID);
     }
   }, [userID]);
+
+  {
+    /* --------------------------------------------Right Side Bar List------------------------------------------------- */
+  }
+
+  const [todayTodos, setTodayTodos] = useState([]);
+
+  // Fetch today's todos
+  const fetchTodayTodos = (userID) => {
+    axios
+      .get("http://localhost:3000/api/getAllTodosByDate", {
+        params: { UserID: userID },
+      })
+      .then((response) => {
+        console.log("API Response for today's todos:", response.data); // Log the entire response
+        if (response.data.lists && response.data.lists.length > 0) {
+          setTodayTodos(response.data.lists);
+        } else {
+          console.log("No tasks due today");
+          setTodayTodos([]); // Ensure state is set to an empty array if no tasks are due today
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching today's todos:", error);
+      });
+  };
 
   const fetchLists = (userID) => {
     axios
@@ -143,6 +170,7 @@ function App() {
     setSelectedListId(listId);
     setSelectedListTitle(listTitle);
     fetchTodosForList(listId);
+    fetchCompletedTodosForList(listId);
   };
 
   {
@@ -217,7 +245,7 @@ function App() {
 
   // Deletes the list and hides the delete form.
   // This should eventually delete the list from the database.
-  const deleteList  = () => {
+  const deleteList = () => {
     // document.querySelector(".delete-form").style.display = "none";
 
     //Otavio's code for delete feature
@@ -253,8 +281,9 @@ function App() {
   }
 
   const [selectedListId, setSelectedListId] = useState(null);
-  const [selectedListTitle, setSelectedListTitle] = useState("Today's Tasks");
+  const [selectedListTitle, setSelectedListTitle] = useState("Pending Tasks");
   const [listItems, setListItems] = useState([]);
+  const [completedTodos, setCompletedTodos] = useState([]);
 
   // const [ListItems, setListItems] = useState([["item 1", "description 1", "due date 1"], ["item 2", "description 2", "due date 2"], ["item 3","description 3", "due date 3"]]);
 
@@ -390,17 +419,17 @@ function App() {
     }
   };
 
-  const DeleteListItem = (index) => {
-    setShowDeleteForm(true);
-    setItemToDelete(index);
-  };
-  const handleDelete = () => {
-    setListItems((prevItems) =>
-      prevItems.filter((item, index) => index !== itemToDelete)
-    );
-    setShowDeleteForm(false);
-    setItemToDelete(null);
-  };
+  // const DeleteListItem = (index) => {
+  //   setShowDeleteForm(true);
+  //   setItemToDelete(index);
+  // };
+  // const handleDelete = () => {
+  //   setListItems((prevItems) =>
+  //     prevItems.filter((item, index) => index !== itemToDelete)
+  //   );
+  //   setShowDeleteForm(false);
+  //   setItemToDelete(null);
+  // };
 
   // Delete To-dos
   const confirmDeleteTodo = (index) => {
@@ -431,18 +460,23 @@ function App() {
       });
   };
 
-  // const yesDeleteList = () => {
-  //   setListItems((prevListItems) => {
-  //     if (Array.isArray(prevListItems)) {
-  //       return prevListItems.filter((_, i) => i !== itemToDelete);
-  //     }
-  //     return prevListItems;
-  //   });
-  // const noDeleteList = () => {
-  //   setShowDeleteForm(false);
-  //   setItemToDelete(null);
-  // }
-  // setListItem(ListItems + [ListItem.name, ListItem.description, ListItem.due_date])
+  // Completed To-dos handling to display
+
+  // Fetch completed to-do items from database
+  const fetchCompletedTodosForList = (listId) => {
+    console.log("Fetching completed todos for list ID:", listId);
+    axios
+      .get("http://localhost:3000/api/getAllCompleteTodosByListID", {
+        params: { listID: listId },
+      })
+      .then((response) => {
+        console.log("Fetched completed todos:", response.data.lists);
+        setCompletedTodos(response.data.lists);
+      })
+      .catch((error) => {
+        console.error("Error fetching completed todos:", error);
+      });
+  };
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES FOR THE SIGN IN FORM----------------------------------------------- */
@@ -540,6 +574,11 @@ function App() {
       });
   };
 
+  // Check the state of todayTodos
+  useEffect(() => {
+    console.log("Today's Todos:", todayTodos);
+  }, [todayTodos]);
+
   {
     /* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */
   }
@@ -565,7 +604,10 @@ function App() {
       </div>
 
       {/* Delete Todo Form */}
-      <div className="delete-todo-form" style={{ display: showDeleteForm ? "block" : "none"  }}>
+      <div
+        className="delete-todo-form"
+        style={{ display: showDeleteForm ? "block" : "none" }}
+      >
         <p>
           Are you sure you want to <strong>delete</strong> this to-do item?
         </p>
@@ -573,13 +615,12 @@ function App() {
           Yes
         </button>
         <button
-          onClick={() => setShowDeleteForm(false)} 
+          onClick={() => setShowDeleteForm(false)}
           className="delete-button"
         >
           No
         </button>
       </div>
-
 
       {/* --------------------------------------------Add To-do and Edit To-do Form------------------------------------------------- */}
 
@@ -850,42 +891,24 @@ function App() {
         <div
           className={`right-sidebar ${isRightSidebarOpen ? "" : "collapsed"}`}
         >
-          <h3 className="priorities-title">Top Priorities</h3>
+          <h3 className="priorities-title">Today's Tasks</h3>
           <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-            <li>Item 5</li>
-            <li>Item 6</li>
+            {todayTodos.length > 0 ? (
+              todayTodos.map((todo, index) => (
+                <li key={index}>
+                  {todo.name} - {todo.list_title}{" "}
+                </li>
+              ))
+            ) : (
+              <li>No tasks due today</li>
+            )}
           </ul>
-
           {/* right sidebar footer */}
           <footer
             className={`r-sidebar-footer ${
               isRightSidebarOpen ? "" : "collapsed"
             }`}
-          >
-            <p>placeholder</p>
-          </footer>
+          ></footer>
         </div>
 
         {/* -------------------------------------------ALL OF THE MAIN/CENTER CONTENT - AKA TO-DO ITEMS ------------------------------------------- */}
@@ -899,27 +922,61 @@ function App() {
             {" "}
             Add New To-do {<FaPlusSquare />}{" "}
           </button>
-          <ol className="currect-list" id="currectList">
+          <div className="currect-list" id="currectList">
             {listItems.map((item, index) => (
-              <div key={index}>
-                <li>{item.name}</li>
-                <p>{item.description}</p>
-                <p>{item.deadline_date}</p>
-                <button
-                  onClick={() => showEditItemForm(index)}
-                  className="edit-button"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => confirmDeleteTodo(index)}
-                  className="delete-button"
-                >
-                  <FaTrash />
-                </button>
+              <div key={index} className="todo-item">
+                <div className="todo-item-header">
+                  <span className="todo-name">{item.name}</span>
+                  <div className="todo-buttons">
+                    <button
+                      onClick={() => showEditItemForm(index)}
+                      className="edit-button"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => confirmDeleteTodo(index)}
+                      className="delete-button"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
+                <div className="todo-item-body">
+                  <p>{item.description}</p>
+                  <p>Deadline: {item.deadline_date}</p>
+                </div>
               </div>
             ))}
-          </ol>
+
+            {/* Completed todos */}
+            <div className="completed-list">
+              <h3>Completed Tasks</h3>
+              {completedTodos.length === 0 ? (
+                <p>No completed tasks.</p>
+              ) : (
+                completedTodos.map((item, index) => (
+                  <div key={index} className="todo-item">
+                    <div className="todo-item-header">
+                      <span className="todo-name">{item.name}</span>
+                      <div className="todo-buttons">
+                        <button
+                          onClick={() => confirmDeleteTodo(index)}
+                          className="delete-button"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="todo-item-body">
+                      <p>{item.description}</p>
+                      <p>Completed on: {item.deadline_date}</p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
 
           {/* main content footer */}
           <footer
