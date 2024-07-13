@@ -1,11 +1,53 @@
 /* The color scheme*/
 :root {
   --dark-gray-2: #1D2128;
-  --dark-gray-1: #282c34;
-  --light-gray-1: #53565b;
+  --dark-gray-1: #282C34;
+  --light-gray-1: #53565B;
   --light-gray-2: #797979;
   --accent-color-green: #6CC466;
   --accent-color-red: #D68983;
+}
+
+body.light {
+  --dark-gray-2: #D9D9D9;
+  --dark-gray-1: #CBCBCB;
+  --light-gray-1: #53565B;
+  --light-gray-2: #5F5F5F;
+  --accent-color-green: #009102;
+  --accent-color-red: #a90000;
+}
+
+body.dark {
+  --dark-gray-2: #1D2128;
+  --dark-gray-1: #282C34;
+  --light-gray-1: #53565B;
+  --light-gray-2: #797979;
+  --accent-color-green: #6CC466;
+  --accent-color-red: #D68983;
+}
+
+/* Color theme button styling */
+.color-button {
+  position: flex;
+  display: grid;
+  justify-content: right;
+  align-items: right;
+  margin-right: 10%;
+  margin-left: 10%;
+  top: 10px;
+  right: 50%;
+  width: 100%;
+  z-index: 1000;
+  background-color: var(--accent-color-green);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.color-button:hover {
+  background-color: var(--accent-color-red);
 }
 
 /* The main app style*/
