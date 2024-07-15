@@ -1,6 +1,9 @@
 //npm run start
 
 //npm run install-all
+//color theme
+import { ThemeProvider } from "./ThemeContext";
+import ColorButton from "./ColorButton";
 // images
 import logo from "./images/checkmate-dark-02.png";
 import name from "./images/checkmate-name-dark.png";
@@ -15,10 +18,11 @@ import { FaPlusSquare } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 // libraries and styles
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 // axios - javascript library to perform HTTP request - https://www.npmjs.com/package/axios < documentation if needed.
 import axios from "axios";
 import jwt from "jsonwebtoken"; // token - session management / authentication
+
 
 function App() {
   {
@@ -28,6 +32,11 @@ function App() {
     "https://avatar.iran.liara.run/public"
   ); // got random avatars from https://avatar-placeholder.iran.liara.run/#document
   const [username, setUsername] = useState("username");
+
+  {
+    /* COLOR THEME */
+  }
+  
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO TOGGLE THE SIDEBARS----------------------------------------------- */
@@ -553,412 +562,416 @@ function App() {
     /* --------------------------------------------ALL OF THE APP CONTENT------------------------------------------------- */
   }
   return (
-    <div className="App">
-      {/* --------------------------------------------THE DELETE LIST and DELETE TO-DO FORM------------------------------------------------- */}
-      {/* Delete List Form */}
-      <div className="delete-form" style={{ display: "none" }}>
-        <p>
-          Are you sure you want to <strong>delete</strong> this list?
-        </p>
-        <button onClick={deleteList} className="delete-button">
-          Yes
-        </button>
-        <button
-          onClick={() =>
-            (document.querySelector(".delete-form").style.display = "none")
-          }
-          className="delete-button"
-        >
-          No
-        </button>
-      </div>
-
-      {/* Delete Todo Form */}
-      <div
-        className="delete-todo-form"
-        style={{ display: showDeleteForm ? "block" : "none" }}
-      >
-        <p>
-          Are you sure you want to <strong>delete</strong> this to-do item?
-        </p>
-        <button onClick={deleteTodoItem} className="delete-button">
-          Yes
-        </button>
-        <button
-          onClick={() => setShowDeleteForm(false)}
-          className="delete-button"
-        >
-          No
-        </button>
-      </div>
-
-      {/* --------------------------------------------Add To-do and Edit To-do Form------------------------------------------------- */}
-
-      {/* Add Item Form */}
-      {showAddForm && (
-        <form
-          className="add-form"
-          onSubmit={isEditing ? editTodoItem : addTodoItem}
-        >
-          <h3>{isEditing ? "Edit Task" : "Add New To-Do"}</h3>
-          <input
-            type="text"
-            name="name"
-            value={ListItem.name}
-            onChange={saveItemInfo}
-            required
-            placeholder="Name"
-          />
-          <input
-            type="text"
-            name="description"
-            value={ListItem.description}
-            onChange={saveItemInfo}
-            required
-            placeholder="Description"
-          />
-          <input
-            type="date"
-            name="due_date"
-            value={ListItem.due_date}
-            onChange={saveItemInfo}
-            required
-            placeholder="Due Date"
-          />
-
-          <button type="submit" className="add-button">
-            {isEditing ? "Save" : "Add"}
+    <ThemeProvider>
+      <div className="App">
+        {/* --------------------------------------------THE DELETE LIST and DELETE TO-DO FORM------------------------------------------------- */}
+        {/* Delete List Form */}
+        <div className="delete-form" style={{ display: "none" }}>
+          <p>
+            Are you sure you want to <strong>delete</strong> this list?
+          </p>
+          <button onClick={deleteList} className="delete-button">
+            Yes
           </button>
           <button
-            type="button"
-            className="cancel-button"
-            onClick={hideAddItemForm}
+            onClick={() =>
+              (document.querySelector(".delete-form").style.display = "none")
+            }
+            className="delete-button"
           >
-            Cancel
+            No
           </button>
-        </form>
-      )}
-
-      {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
-      <form className="signin-form" onSubmit={submitSignInForm}>
-        <div className="flex-signin-form">
-          <h3>Sign In</h3>
-
-          <input
-            type="text"
-            className="authentication-item"
-            id="username"
-            placeholder="Username"
-            required
-          />
-          <p className="forgot">forgot Username</p>
-          <input
-            type="password"
-            className="authentication-item"
-            id="password"
-            placeholder="Password"
-            required
-          />
-          <p className="forgot">forgot Password</p>
-          <div className="button-container">
-            <button type="submit" className="signin-button">
-              Submit
-            </button>
-            <button
-              type="button"
-              className="signin-button"
-              onClick={hideSignInForm}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="signin-button"
-              onClick={showNewUserForm}
-            >
-              New User
-            </button>
-          </div>
         </div>
-      </form>
 
-      {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
-      <form className="new-user-form" onSubmit={submitNewUserForm}>
-        <div className="flex-signin-form">
-          <h3>Register as a New User</h3>
-
-          <input
-            type="text"
-            className="authentication-item"
-            id="new-username"
-            placeholder="Username"
-            required
-          />
-          <input
-            type="text"
-            className="authentication-item"
-            id="new-password"
-            placeholder="Password"
-            required
-          />
-          <div className="button-container">
-            <button type="submit" className="signin-button">
-              Submit
-            </button>
-            {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
-            <button
-              type="button"
-              className="signin-button"
-              onClick={hideNewUserForm}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="signin-button"
-              onClick={showSignInForm}
-            >
-              Existing User
-            </button>
-          </div>
-        </div>
-      </form>
-      {/* --------------------------------------------LOGOUT MODAL---------------------------------------------- */}
-      <div className="logout-form" style={{ display: "none" }}>
-        <p>
-          Are you sure you want to <strong>logout</strong>?
-        </p>
-        <button onClick={logoutUser} className="form-button">
-          Yes
-        </button>
-        <button onClick={hideLogoutForm} className="form-button">
-          No
-        </button>
-      </div>
-
-      {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
-      <p className="placeholder"></p>
-      <header
-        className={`app-header ${isRightSidebarOpen ? "" : "right"} ${
-          isLeftSidebarOpen ? "" : "left"
-        }`}
-      >
-        {/* left sidebar header */}
+        {/* Delete Todo Form */}
         <div
-          className={`l-sidebar-header ${isLeftSidebarOpen ? "" : "collapsed"}`}
+          className="delete-todo-form"
+          style={{ display: showDeleteForm ? "block" : "none" }}
         >
-          <button
-            onClick={toggleLeftSidebar}
-            className={`toggle-button-l ${
-              isLeftSidebarOpen ? "" : "collapsed"
-            }`}
-          >
-            {isLeftSidebarOpen ? (
-              <RiArrowLeftWideFill />
-            ) : (
-              <RiArrowRightWideFill />
-            )}
+          <p>
+            Are you sure you want to <strong>delete</strong> this to-do item?
+          </p>
+          <button onClick={deleteTodoItem} className="delete-button">
+            Yes
           </button>
-          <img
-            src={logo}
-            className={`app-logo ${isLeftSidebarOpen ? "" : "collapsed"}`}
-            alt="logo"
-          />
-        </div>
-
-        {/* center header */}
-        <div className={`main-header`}>
-          <img src={name} className="app-name" alt="Check Mate" />
-          <input type="text" className="search-box" placeholder="Search..." />
-          <IoSearchCircle />
-        </div>
-
-        {/* right sidebar header */}
-        <div
-          className={`r-sidebar-header ${
-            isRightSidebarOpen ? "" : "collapsed"
-          }`}
-        >
-          {/* Replace "username" at end of line with current signin username, keep username as default placeholder?? */}
-          <h5 className={`username ${isRightSidebarOpen ? "" : "collapsed"}`}>
-            {username}
-          </h5>
-          {/* <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div> */}
           <button
-            onClick={showSignInForm}
-            style={{ border: "none", padding: 0, background: "none" }}
+            onClick={() => setShowDeleteForm(false)}
+            className="delete-button"
           >
-            {/* Replace image with user img on login?? Keep fake as default, have this call a variable grabbing userimg */}
-            <img
-              src={userImage}
-              className="user-img"
-              alt="user img"
-              style={{ cursor: "pointer" }}
+            No
+          </button>
+        </div>
+
+        {/* --------------------------------------------Add To-do and Edit To-do Form------------------------------------------------- */}
+
+        {/* Add Item Form */}
+        {showAddForm && (
+          <form
+            className="add-form"
+            onSubmit={isEditing ? editTodoItem : addTodoItem}
+          >
+            <h3>{isEditing ? "Edit Task" : "Add New To-Do"}</h3>
+            <input
+              type="text"
+              name="name"
+              value={ListItem.name}
+              onChange={saveItemInfo}
+              required
+              placeholder="Name"
             />
-          </button>
-          <button
-            onClick={toggleRightSidebar}
-            className={`toggle-button-r ${
-              isRightSidebarOpen ? "" : "collapsed"
-            }`}
-          >
-            {isRightSidebarOpen ? (
-              <RiArrowRightWideFill />
-            ) : (
-              <RiArrowLeftWideFill />
-            )}
-          </button>
-        </div>
-      </header>
+            <input
+              type="text"
+              name="description"
+              value={ListItem.description}
+              onChange={saveItemInfo}
+              required
+              placeholder="Description"
+            />
+            <input
+              type="date"
+              name="due_date"
+              value={ListItem.due_date}
+              onChange={saveItemInfo}
+              required
+              placeholder="Due Date"
+            />
 
-      <main>
-        {/* -------------------------------------------ALL OF THE SIDEBARS------------------------------------------- */}
-        {/* Left Sidebar */}
-        <div className={`left-sidebar ${isLeftSidebarOpen ? "" : "collapsed"}`}>
-          <h3>Check Lists</h3>
-          <div className="list-container">
-            {checkList.map((item, index) => (
-              <div className="list-buttons" key={index}>
-                <button
-                  onClick={(e) => changeList(e, item.list_id, item.list_title)}
-                  className="list-button"
-                >
-                  {item.list_title}
-                </button>
-                <button
-                  onClick={(event) => editList(event, "edit", index)}
-                  className="edit-button"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={(event) => confirmDeleteList(index)}
-                  className="delete-button"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* left sidebar footer */}
-          <footer
-            className={`l-sidebar-footer ${
-              isLeftSidebarOpen ? "" : "collapsed"
-            }`}
-          >
-            <button onClick={createNewList} className="new-list">
-              {
-                <p>
-                  New List <FaPlusSquare />
-                </p>
-              }
+            <button type="submit" className="add-button">
+              {isEditing ? "Save" : "Add"}
             </button>
-          </footer>
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={hideAddItemForm}
+            >
+              Cancel
+            </button>
+          </form>
+        )}
+
+        {/*-----------------------------------------------------SIGN IN FORM----------------------------------------------*/}
+        <form className="signin-form" onSubmit={submitSignInForm}>
+          <div className="flex-signin-form">
+            <h3>Sign In</h3>
+
+            <input
+              type="text"
+              className="authentication-item"
+              id="username"
+              placeholder="Username"
+              required
+            />
+            <p className="forgot">forgot Username</p>
+            <input
+              type="password"
+              className="authentication-item"
+              id="password"
+              placeholder="Password"
+              required
+            />
+            <p className="forgot">forgot Password</p>
+            <div className="button-container">
+              <button type="submit" className="signin-button">
+                Submit
+              </button>
+              <button
+                type="button"
+                className="signin-button"
+                onClick={hideSignInForm}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="signin-button"
+                onClick={showNewUserForm}
+              >
+                New User
+              </button>
+            </div>
+          </div>
+        </form>
+
+        {/*-----------------------------------------------------NEW USER FORM----------------------------------------------*/}
+        <form className="new-user-form" onSubmit={submitNewUserForm}>
+          <div className="flex-signin-form">
+            <h3>Register as a New User</h3>
+
+            <input
+              type="text"
+              className="authentication-item"
+              id="new-username"
+              placeholder="Username"
+              required
+            />
+            <input
+              type="text"
+              className="authentication-item"
+              id="new-password"
+              placeholder="Password"
+              required
+            />
+            <div className="button-container">
+              <button type="submit" className="signin-button">
+                Submit
+              </button>
+              {/* <button type="submit" className="add-button" onClick={}>Add</button> */}
+              <button
+                type="button"
+                className="signin-button"
+                onClick={hideNewUserForm}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="signin-button"
+                onClick={showSignInForm}
+              >
+                Existing User
+              </button>
+            </div>
+          </div>
+        </form>
+        {/* --------------------------------------------LOGOUT MODAL---------------------------------------------- */}
+        <div className="logout-form" style={{ display: "none" }}>
+          <p>
+            Are you sure you want to <strong>logout</strong>?
+          </p>
+          <button onClick={logoutUser} className="form-button">
+            Yes
+          </button>
+          <button onClick={hideLogoutForm} className="form-button">
+            No
+          </button>
         </div>
 
-        {/* Right Sidebar */}
-        <div
-          className={`right-sidebar ${isRightSidebarOpen ? "" : "collapsed"}`}
-        >
-          <h3 className="priorities-title">Today's Tasks</h3>
-          <ul>
-            {todayTodos.length > 0 ? (
-              todayTodos.map((todo, index) => (
-                <li key={index}>
-                  {todo.name} - {todo.list_title}{" "}
-                </li>
-              ))
-            ) : (
-              <li>No tasks due today</li>
-            )}
-          </ul>
-          {/* right sidebar footer */}
-          <footer
-            className={`r-sidebar-footer ${
-              isRightSidebarOpen ? "" : "collapsed"
-            }`}
-          ></footer>
-        </div>
-
-        {/* -------------------------------------------ALL OF THE MAIN/CENTER CONTENT - AKA TO-DO ITEMS ------------------------------------------- */}
-        <div
-          className={`content ${isRightSidebarOpen ? "" : "right"} ${
+        {/* --------------------------------------------ALL OF THE HEADER---------------------------------------------- */}
+        <p className="placeholder"></p>
+        <header
+          className={`app-header ${isRightSidebarOpen ? "" : "right"} ${
             isLeftSidebarOpen ? "" : "left"
           }`}
         >
-          <h3 className="list-title">{selectedListTitle}</h3>
-          <button className="add-new-todo" onClick={showAddItemForm}>
-            {" "}
-            Add New To-do {<FaPlusSquare />}{" "}
-          </button>
-          <div className="currect-list" id="currectList">
-            {listItems.map((item, index) => (
-              <div key={index} className="todo-item">
-                <div className="todo-item-header">
-                  <span className="todo-name">{item.name}</span>
-                  <div className="todo-buttons">
-                    <button
-                      onClick={() => showEditItemForm(index)}
-                      className="edit-button"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => confirmDeleteTodo(index)}
-                      className="delete-button"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </div>
-                <div className="todo-item-body">
-                  <p>{item.description}</p>
-                  <p>Deadline: {item.deadline_date}</p>
-                </div>
-              </div>
-            ))}
-
-            {/* Completed todos */}
-            <div className="completed-list">
-              <h3>Completed Tasks</h3>
-              {completedTodos.length === 0 ? (
-                <p>No completed tasks.</p>
+          {/* left sidebar header */}
+          <div
+            className={`l-sidebar-header ${isLeftSidebarOpen ? "" : "collapsed"}`}
+          >
+            <button
+              onClick={toggleLeftSidebar}
+              className={`toggle-button-l ${
+                isLeftSidebarOpen ? "" : "collapsed"
+              }`}
+            >
+              {isLeftSidebarOpen ? (
+                <RiArrowLeftWideFill />
               ) : (
-                completedTodos.map((item, index) => (
-                  <div key={index} className="todo-item">
-                    <div className="todo-item-header">
-                      <span className="todo-name">{item.name}</span>
-                      <div className="todo-buttons">
-                        <button
-                          onClick={() => confirmDeleteTodo(index)}
-                          className="delete-button"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="todo-item-body">
-                      <p>{item.description}</p>
-                      <p>Completed on: {item.deadline_date}</p>
-                    </div>
-                  </div>
-                ))
+                <RiArrowRightWideFill />
               )}
-            </div>
+            </button>
+            <img
+              src={logo}
+              className={`app-logo ${isLeftSidebarOpen ? "" : "collapsed"}`}
+              alt="logo"
+            />
           </div>
 
-          {/* main content footer */}
-          <footer
-            className={`main-footer ${isRightSidebarOpen ? "" : "right"} ${
+          {/* center header */}
+          <div className={`main-header`}>
+            <img src={name} className="app-name" alt="Check Mate" />
+            <input type="text" className="search-box" placeholder="Search..." />
+            <IoSearchCircle />
+            
+            <ColorButton />
+          </div>
+            
+          {/* right sidebar header */}
+          <div
+            className={`r-sidebar-header ${
+              isRightSidebarOpen ? "" : "collapsed"
+            }`}
+          >
+            {/* Replace "username" at end of line with current signin username, keep username as default placeholder?? */}
+            <h5 className={`username ${isRightSidebarOpen ? "" : "collapsed"}`}>
+              {username}
+            </h5>
+            {/* <div className="user-img-centering"><img src="https://fakeimg.pl/50x50" className="user-img" alt="user img" /></div> */}
+            <button
+              onClick={showSignInForm}
+              style={{ border: "none", padding: 0, background: "none" }}
+            >
+              {/* Replace image with user img on login?? Keep fake as default, have this call a variable grabbing userimg */}
+              <img
+                src={userImage}
+                className="user-img"
+                alt="user img"
+                style={{ cursor: "pointer" }}
+              />
+            </button>
+            <button
+              onClick={toggleRightSidebar}
+              className={`toggle-button-r ${
+                isRightSidebarOpen ? "" : "collapsed"
+              }`}
+            >
+              {isRightSidebarOpen ? (
+                <RiArrowRightWideFill />
+              ) : (
+                <RiArrowLeftWideFill />
+              )}
+            </button>
+          </div>
+        </header>
+
+        <main>
+          {/* -------------------------------------------ALL OF THE SIDEBARS------------------------------------------- */}
+          {/* Left Sidebar */}
+          <div className={`left-sidebar ${isLeftSidebarOpen ? "" : "collapsed"}`}>
+            <h3>Check Lists</h3>
+            <div className="list-container">
+              {checkList.map((item, index) => (
+                <div className="list-buttons" key={index}>
+                  <button
+                    onClick={(e) => changeList(e, item.list_id, item.list_title)}
+                    className="list-button"
+                  >
+                    {item.list_title}
+                  </button>
+                  <button
+                    onClick={(event) => editList(event, "edit", index)}
+                    className="edit-button"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={(event) => confirmDeleteList(index)}
+                    className="delete-button"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* left sidebar footer */}
+            <footer
+              className={`l-sidebar-footer ${
+                isLeftSidebarOpen ? "" : "collapsed"
+              }`}
+            >
+              <button onClick={createNewList} className="new-list">
+                {
+                  <p>
+                    New List <FaPlusSquare />
+                  </p>
+                }
+              </button>
+            </footer>
+          </div>
+
+          {/* Right Sidebar */}
+          <div
+            className={`right-sidebar ${isRightSidebarOpen ? "" : "collapsed"}`}
+          >
+            <h3 className="priorities-title">Today's Tasks</h3>
+            <ul>
+              {todayTodos.length > 0 ? (
+                todayTodos.map((todo, index) => (
+                  <li key={index}>
+                    {todo.name} - {todo.list_title}{" "}
+                  </li>
+                ))
+              ) : (
+                <li>No tasks due today</li>
+              )}
+            </ul>
+            {/* right sidebar footer */}
+            <footer
+              className={`r-sidebar-footer ${
+                isRightSidebarOpen ? "" : "collapsed"
+              }`}
+            ></footer>
+          </div>
+
+          {/* -------------------------------------------ALL OF THE MAIN/CENTER CONTENT - AKA TO-DO ITEMS ------------------------------------------- */}
+          <div
+            className={`content ${isRightSidebarOpen ? "" : "right"} ${
               isLeftSidebarOpen ? "" : "left"
             }`}
           >
-            <p>&copy; 2023 Check Mate. All rights reserved.</p>
-          </footer>
-        </div>
-      </main>
-    </div>
+            <h3 className="list-title">{selectedListTitle}</h3>
+            <button className="add-new-todo" onClick={showAddItemForm}>
+              {" "}
+              Add New To-do {<FaPlusSquare />}{" "}
+            </button>
+            <div className="currect-list" id="currectList">
+              {listItems.map((item, index) => (
+                <div key={index} className="todo-item">
+                  <div className="todo-item-header">
+                    <span className="todo-name">{item.name}</span>
+                    <div className="todo-buttons">
+                      <button
+                        onClick={() => showEditItemForm(index)}
+                        className="edit-button"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => confirmDeleteTodo(index)}
+                        className="delete-button"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="todo-item-body">
+                    <p>{item.description}</p>
+                    <p>Deadline: {item.deadline_date}</p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Completed todos */}
+              <div className="completed-list">
+                <h3>Completed Tasks</h3>
+                {completedTodos.length === 0 ? (
+                  <p>No completed tasks.</p>
+                ) : (
+                  completedTodos.map((item, index) => (
+                    <div key={index} className="todo-item">
+                      <div className="todo-item-header">
+                        <span className="todo-name">{item.name}</span>
+                        <div className="todo-buttons">
+                          <button
+                            onClick={() => confirmDeleteTodo(index)}
+                            className="delete-button"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="todo-item-body">
+                        <p>{item.description}</p>
+                        <p>Completed on: {item.deadline_date}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* main content footer */}
+            <footer
+              className={`main-footer ${isRightSidebarOpen ? "" : "right"} ${
+                isLeftSidebarOpen ? "" : "left"
+              }`}
+            >
+              <p>&copy; 2023 Check Mate. All rights reserved.</p>
+            </footer>
+          </div>
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 
