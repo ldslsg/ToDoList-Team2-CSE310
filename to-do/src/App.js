@@ -5,9 +5,10 @@
 import { ThemeProvider } from "./ThemeContext";
 import ColorButton from "./ColorButton";
 // images
-import logo from "./images/checkmate-dark-02.png";
-import name from "./images/checkmate-name-dark.png";
-import background_logo from "./images/checkmate-tall.png";
+import logo_dark from "./images/checkmate-dark.png";
+import name_dark from "./images/checkmate-name-dark.png";
+import logo_light from "./images/checkmate-light.png";
+import name_light from "./images/checkmate-name-light.png";
 // icons
 import { IoSearchCircle } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
@@ -770,7 +771,7 @@ function App() {
               )}
             </button>
             <img
-              src={logo}
+              src={logo_dark}
               className={`app-logo ${isLeftSidebarOpen ? "" : "collapsed"}`}
               alt="logo"
             />
@@ -778,7 +779,7 @@ function App() {
 
           {/* center header */}
           <div className={`main-header`}>
-            <img src={name} className="app-name" alt="Check Mate" />
+            <img src={name_dark} className="app-name" alt="Check Mate" />
             <input type="text" className="search-box" placeholder="Search..." />
             <IoSearchCircle />
             

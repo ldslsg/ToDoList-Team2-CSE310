@@ -15,6 +15,7 @@ body.light {
   --light-gray-2: #5F5F5F;
   --accent-color-green: #009102;
   --accent-color-red: #a90000;
+  --tall-image: url('./images/checkmate-tall-light.png');
 }
 
 body.dark {
@@ -24,6 +25,7 @@ body.dark {
   --light-gray-2: #797979;
   --accent-color-green: #6CC466;
   --accent-color-red: #D68983;
+  --tall-image: url('./images/checkmate-tall-dark.png');
 }
 
 /* Color theme button styling */
@@ -299,7 +301,7 @@ body.dark {
   width: 227px;
   border-left: 1px solid var(--accent-color-green);
 
-  background-image: url('./images/checkmate-tall.png');
+  background-image: var(--tall-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -390,7 +392,7 @@ body.dark {
 }
 
 .todo-item-body p {
-  color: #6cc466a6;
+  color: var(--accent-color-green);
 }
 
 /*if the left sidebar is closed*/
