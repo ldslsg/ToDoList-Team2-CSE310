@@ -72,7 +72,7 @@ async function editToDos(todoID, nameTodo, description , date,) {
 }
 
 // update status of item (to-do)
-async function updateStatus(todoID) {
+async function changeStatusInDb(todoID) {
   const db = await openDb();
   const result = await db.run(
     'UPDATE to_dos SET status = "Completed" where to_dos_id = ?',
@@ -89,5 +89,5 @@ module.exports = {
   allTodosByDate,
   allTodosByPriority,
   editToDos,
-  updateStatus
+  changeStatusInDb
 };

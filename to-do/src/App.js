@@ -11,7 +11,7 @@ import logo_light from "./images/checkmate-light.png";
 import name_light from "./images/checkmate-name-light.png";
 // icons
 import { IoSearchCircle } from "react-icons/io5";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaRegCheckSquare } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { RiArrowRightWideFill } from "react-icons/ri";
 import { RiArrowLeftWideFill } from "react-icons/ri";
@@ -23,7 +23,6 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 // axios - javascript library to perform HTTP request - https://www.npmjs.com/package/axios < documentation if needed.
 import axios from "axios";
 import jwt from "jsonwebtoken"; // token - session management / authentication
-
 
 function App() {
   {
@@ -37,7 +36,6 @@ function App() {
   {
     /* COLOR THEME */
   }
-  
 
   {
     /* --------------------------------------------FUNCTIONS AND VARIABLES TO TOGGLE THE SIDEBARS----------------------------------------------- */
@@ -168,6 +166,7 @@ function App() {
         var ButtonText = listName.value;
         addCheckList(ButtonText);
         listName.remove();
+        window.location.reload();
       }
     });
   }
@@ -302,13 +301,13 @@ function App() {
   // Makes the add item form visible.
   const showAddItemForm = () => {
     // document.querySelector(".add-form").style.display = "block";
-    setShowAddForm(true); 
+    setShowAddForm(true);
   };
 
   // Hides the add item form.
   const hideAddItemForm = () => {
     // document.querySelector(".add-form").style.display = "none";
-    setShowAddForm(false); 
+    setShowAddForm(false);
   };
 
   //get items from db
@@ -318,7 +317,7 @@ function App() {
         params: { listID: listId },
       })
       .then((response) => {
-        console.log("Fetched todos:", response.data.lists); 
+        console.log("Fetched todos:", response.data.lists);
         setListItems(response.data.lists);
       })
       .catch((error) => {
@@ -356,6 +355,7 @@ function App() {
           ]);
           setListItem({ name: "", description: "", due_date: "" });
           hideAddItemForm();
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error creating new todo item:", error);
@@ -409,6 +409,37 @@ function App() {
           console.error("Error editing todo item:", error);
         });
     }
+  };
+
+  //Change Status To-do
+
+  const [showChangeStatusForm, setShowChangeStatusForm] = useState(false);
+  const [itemToChangeStatus, setItemToChangeStatus] = useState(null);
+
+  const showChangeStatusItemForm = (index) => {
+    setItemToChangeStatus(index);
+    setShowChangeStatusForm(true);
+  };
+
+  const changeTodoStatus = () => {
+    const todoID = listItems[itemToChangeStatus].to_dos_id; 
+    axios
+      .put("http://localhost:3000/api/changeStatusInDb", {
+        todoID: todoID,
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        const updatedListItems = listItems.map((item, index) =>
+          index === itemToChangeStatus ? { ...item, status: "Completed" } : item
+        );
+        setListItems(updatedListItems);
+        setItemToChangeStatus(null);
+        setShowChangeStatusForm(false);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error changing todo status:", error);
+      });
   };
 
   // Delete To-dos
@@ -465,7 +496,7 @@ function App() {
   const showSignInForm = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      showLogoutForm(); 
+      showLogoutForm();
     } else {
       // make sure the info from last user is gone
       document.querySelector("#username").value = "";
@@ -513,6 +544,7 @@ function App() {
     setUserID(null);
     setCheckList([]);
     hideLogoutForm();
+    window.location.reload();
   };
 
   const showLogoutForm = () => {
@@ -598,6 +630,26 @@ function App() {
           <button
             onClick={() => setShowDeleteForm(false)}
             className="delete-button"
+          >
+            No
+          </button>
+        </div>
+
+        {/* Change Status Form */}
+        <div
+          className="change-status-form"
+          style={{ display: showChangeStatusForm ? "block" : "none" }}
+        >
+          <p>
+            Are you sure you want to <strong>mark</strong> this to-do item as
+            complete?
+          </p>
+          <button onClick={changeTodoStatus} className="status-button">
+            Yes
+          </button>
+          <button
+            onClick={() => setShowChangeStatusForm(false)}
+            className="status-button"
           >
             No
           </button>
@@ -724,13 +776,13 @@ function App() {
               >
                 Cancel
               </button>
-              <button
+              {/* <button
                 type="button"
                 className="signin-button"
                 onClick={showSignInForm}
               >
                 Existing User
-              </button>
+              </button> */}
             </div>
           </div>
         </form>
@@ -756,7 +808,9 @@ function App() {
         >
           {/* left sidebar header */}
           <div
-            className={`l-sidebar-header ${isLeftSidebarOpen ? "" : "collapsed"}`}
+            className={`l-sidebar-header ${
+              isLeftSidebarOpen ? "" : "collapsed"
+            }`}
           >
             <button
               onClick={toggleLeftSidebar}
@@ -782,10 +836,10 @@ function App() {
             <img src={name_dark} className="app-name" alt="Check Mate" />
             <input type="text" className="search-box" placeholder="Search..." />
             <IoSearchCircle />
-            
+
             <ColorButton />
           </div>
-            
+
           {/* right sidebar header */}
           <div
             className={`r-sidebar-header ${
@@ -827,13 +881,17 @@ function App() {
         <main>
           {/* -------------------------------------------ALL OF THE SIDEBARS------------------------------------------- */}
           {/* Left Sidebar */}
-          <div className={`left-sidebar ${isLeftSidebarOpen ? "" : "collapsed"}`}>
+          <div
+            className={`left-sidebar ${isLeftSidebarOpen ? "" : "collapsed"}`}
+          >
             <h3>Check Lists</h3>
             <div className="list-container">
               {checkList.map((item, index) => (
                 <div className="list-buttons" key={index}>
                   <button
-                    onClick={(e) => changeList(e, item.list_id, item.list_title)}
+                    onClick={(e) =>
+                      changeList(e, item.list_id, item.list_title)
+                    }
                     className="list-button"
                   >
                     {item.list_title}
@@ -911,6 +969,12 @@ function App() {
                   <div className="todo-item-header">
                     <span className="todo-name">{item.name}</span>
                     <div className="todo-buttons">
+                      <button
+                        onClick={() => showChangeStatusItemForm(index)}
+                        className="status-button"
+                            >
+                        <FaRegCheckSquare />
+                      </button>
                       <button
                         onClick={() => showEditItemForm(index)}
                         className="edit-button"

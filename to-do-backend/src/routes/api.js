@@ -12,7 +12,8 @@ router.get('/getAllCompleteTodosByListID', todoController.getAllCompleteTodosByL
 router.get('/getAllTodosByDate', todoController.getAllTodosByDate);
 router.get('/getAllTodosByPriority', todoController.getAllTodosByPriority);
 router.put('/editToDos', todoController.editTodo);
-router.put('/updateStatus', todoController.updateStatusComplete);
+router.put('/changeStatusInDb', todoController.changeTodoStatus);
+
 
 // routes that effect users
 router.post('/newUser', userController.createNewUser);

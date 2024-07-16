@@ -1,4 +1,4 @@
-const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPriority, editToDos, updateStatus, allCompleteTodosByListID} = require('../model/todoModel');
+const {createTodo, deleteTodo, allTodosByListID, allTodosByDate, allTodosByPriority, editToDos, updateStatus, allCompleteTodosByListID, changeStatusInDb} = require('../model/todoModel');
 
 // create new item (to-do)
 async function createNewTodo(req, res) {
@@ -97,15 +97,14 @@ async function editTodo(req, res) {
   }
 }
 
-// update status of item (to-do)
-async function updateStatusComplete(req, res) {
+// change Status
+async function changeTodoStatus(req, res) {
   try {
-    const { todoID} = req.body;
-    await updateStatus(todoID);
-    res.status(201).json({ message: 'Status updated' });
-    console.log('Status updated');
+    const { todoID } = req.body;
+    await changeStatusInDb(todoID);
+    res.status(200).json({ message: 'Todo status updated successfully' });
   } catch (error) {
-    console.error('Error updating status:', error);
+    console.error('Error changing todo status:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 }
@@ -119,6 +118,6 @@ async function updateStatusComplete(req, res) {
     getAllTodosByDate,
     getAllTodosByPriority,
     editTodo,
-    updateStatusComplete
+    changeTodoStatus
   };
   

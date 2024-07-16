@@ -378,12 +378,45 @@ body.dark {
 }
 
 .todo-buttons .edit-button,
-.todo-buttons .delete-button {
+.todo-buttons .delete-button, .todo-buttons .status-button {
   font-size: 1.5em; 
   padding: 10px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  background-color: transparent;
+}
+
+.todo-buttons .status-button {
+  color: var(--accent-color-green);
+}
+
+.change-status-form {
+  position: fixed;
+  width: 300px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--accent-color-green);
+  padding: 20px;
+  border: 1px solid var(--accent-color-green);
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  display: none; /* This is controlled by the inline style */
+}
+
+.change-status-form .status-button {
+  margin: 25px 5px;
+  background-color: var(--accent-color-red);
+  border: 1px solid var(--dark-gray-1);
+  border-radius: 5px;
+}
+
+.change-status-form .status-button:hover {
+  background-color: var(--accent-color-green);
+  color: #1D2128;
 }
 
 .todo-item-body {
