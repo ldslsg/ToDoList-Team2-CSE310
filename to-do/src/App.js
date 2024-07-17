@@ -422,7 +422,7 @@ function App() {
   };
 
   const changeTodoStatus = () => {
-    const todoID = listItems[itemToChangeStatus].to_dos_id; 
+    const todoID = listItems[itemToChangeStatus].to_dos_id;
     axios
       .put("http://localhost:3000/api/changeStatusInDb", {
         todoID: todoID,
@@ -443,34 +443,40 @@ function App() {
   };
 
   // Delete To-dos
-  const confirmDeleteTodo = (index) => {
-    setItemToDelete(index);
+  const confirmDeleteTodo = (index, isCompleted) => {
+    setItemToDelete({ index, isCompleted });
     setShowDeleteForm(true);
-    // document.querySelector(".delete-todo-form").style.display = "block";
   };
 
   const deleteTodoItem = () => {
-    const todoID = listItems[itemToDelete].to_dos_id; // Get the correct todo ID
+    const { index, isCompleted } = itemToDelete;
+    const todoID = isCompleted
+      ? completedTodos[index].to_dos_id
+      : listItems[index].to_dos_id;
+
     axios
       .delete("http://localhost:3000/api/deleteTodo", {
         data: { todoID: todoID },
       })
       .then((response) => {
         console.log(response.data.message);
-        const updatedListItems = listItems.filter(
-          (_, index) => index !== itemToDelete
-        );
-        setListItems(updatedListItems);
+        const updatedListItems = isCompleted
+          ? completedTodos.filter((_, i) => i !== index)
+          : listItems.filter((_, i) => i !== index);
+
+        if (isCompleted) {
+          setCompletedTodos(updatedListItems);
+        } else {
+          setListItems(updatedListItems);
+        }
+
         setItemToDelete(null);
         setShowDeleteForm(false);
-        // document.querySelector(".delete-todo-form").style.display = "none";
-        // document.querySelector(".delete-todo-form").style.display = "none";
       })
       .catch((error) => {
         console.error("Error deleting todo item:", error);
       });
   };
-
   // Completed To-dos handling to display
 
   // Fetch completed to-do items from database
@@ -972,7 +978,7 @@ function App() {
                       <button
                         onClick={() => showChangeStatusItemForm(index)}
                         className="status-button"
-                            >
+                      >
                         <FaRegCheckSquare />
                       </button>
                       <button
@@ -982,7 +988,7 @@ function App() {
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => confirmDeleteTodo(index)}
+                        onClick={() => confirmDeleteTodo(index, false)}
                         className="delete-button"
                       >
                         <FaTrash />
@@ -1008,7 +1014,7 @@ function App() {
                         <span className="todo-name">{item.name}</span>
                         <div className="todo-buttons">
                           <button
-                            onClick={() => confirmDeleteTodo(index)}
+                            onClick={() => confirmDeleteTodo(index, true)}
                             className="delete-button"
                           >
                             <FaTrash />
