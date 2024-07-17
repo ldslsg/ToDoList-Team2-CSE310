@@ -186,7 +186,7 @@ body.dark {
   padding: 10px;
   padding-right: 40px;
   margin-right: 10px;
-  color: white;
+  color: var(--light-gray-2);
 }
 
 /* The user image and username styles in the right sidebar header*/
