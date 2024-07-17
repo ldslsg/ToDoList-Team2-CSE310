@@ -5,6 +5,7 @@
   --light-gray-1: #53565B;
   --light-gray-2: #797979;
   --accent-color-green: #6CC466;
+  --transparent-background: #ffffff25;
   --accent-color-red: #D68983;
 }
 
@@ -14,6 +15,7 @@ body.light {
   --light-gray-1: #53565B;
   --light-gray-2: #5F5F5F;
   --accent-color-green: #009102;
+  --transparent-background: #00000025;
   --accent-color-red: #a90000;
   --tall-image: url('./images/checkmate-tall-light.png');
 }
@@ -358,6 +360,7 @@ body.dark {
   border-radius: 5px;
   margin-left: 5px;
   margin-right: 5px;
+  background-color: var(--transparent-background);
 }
 
 .todo-item-header {
